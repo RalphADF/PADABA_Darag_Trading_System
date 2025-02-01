@@ -28,7 +28,7 @@
                             <div class="table-responsive pt-3">
                                 {{-- DataTable --}}
                                 <table id="users" class="table table-bordered"> {{-- using the id here for the DataTable --}}
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
@@ -36,7 +36,7 @@
                                             <th>City</th>
                                             <th>State</th>
                                             <th>Country</th>
-                                            <th>Pincode</th>
+                                            <th>Zip Code</th>
                                             <th>Mobile</th>
                                             <th>Email</th>
                                             <th>Status</th>
@@ -48,7 +48,7 @@
                                         @foreach ($users as $user)
                                             <tr>
                                                 <td>{{ $user['id'] }}</td>
-                                                <td>{{ $user['name'] }}</td>
+                                                <td>{{ $user['name'] }} {{ $user['mname'] }} {{ $user['lname'] }}</td>
                                                 <td>{{ $user['address'] }}</td>
                                                 <td>{{ $user['city'] }}</td>
                                                 <td>{{ $user['state'] }}</td>
@@ -83,7 +83,7 @@
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights reserved.</span>
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block"></span>
             </div>
         </footer>
         <!-- partial -->

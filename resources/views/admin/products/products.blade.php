@@ -31,12 +31,11 @@
                             <div class="table-responsive pt-3">
                                 {{-- DataTable --}}
                                 <table id="products" class="table table-bordered"> {{-- using the id here for the DataTable --}}
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
                                             <th>ID</th>
                                             <th>Product Name</th>
                                             <th>Product Code</th>
-                                            <th>Product Color</th>
                                             <th>Product Image</th>
                                             <th>Category</th> {{-- Through the relationship --}}
                                             <th>Section</th>  {{-- Through the relationship --}}
@@ -51,7 +50,6 @@
                                                 <td>{{ $product['id'] }}</td>
                                                 <td>{{ $product['product_name'] }}</td>
                                                 <td>{{ $product['product_code'] }}</td>
-                                                <td>{{ $product['product_color'] }}</td>
                                                 <td>
                                                     @if (!empty($product['product_image']))
                                                         <img style="width:120px; height:100px" src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}"> {{-- Show the 'small' image size from the 'small' folder --}}
@@ -112,7 +110,7 @@
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights reserved.</span>
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block"></span>
             </div>
         </footer>
         <!-- partial -->

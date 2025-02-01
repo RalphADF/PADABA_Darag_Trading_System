@@ -33,7 +33,7 @@
             @if (!empty($meta_title))
                 {{ $meta_title }}
             @else
-                Laravel Multi Vendor E-commerce Template - By Multi-vendor E-commerce Application Channel
+                PADABA Trading System
             @endif
             
         </title>

@@ -12,7 +12,10 @@ $(document).ready(function() {
     $('#filters').DataTable();     // in filters.blade.php
     $('#coupons').DataTable();     // in admin/coupons/coupons.blade.php              
     $('#users').DataTable();       // in admin/users/users.blade.php                  
-    $('#orders').DataTable();      // in admin/orders/orders.blade.php                
+    $('#orders').DataTable({
+        "order": [[0, "desc"]] // Sort the first column (index 0) in descending order
+      });
+            // in admin/orders/orders.blade.php                
     $('#shipping').DataTable();    // in admin/shipping/shipping_charges.blade.php    
     $('#subscribers').DataTable(); // in admin/subscribers/subscribers.blade.php      
     $('#ratings').DataTable();     // in admin/ratings/ratings.blade.php              
@@ -62,9 +65,9 @@ $(document).ready(function() {
             data   : {status: status, admin_id: admin_id}, // we pass the status and admin_id
             success: function(resp) {
                 if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#admin-' + admin_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
+                    $('#admin-' + admin_id).html('<i style="font-size: 25px; color: red;" class="mdi mdi-account-remove" status="Inactive"></i> <h7>Unapproved</h7>');
                 } else if (resp.status == 1) {
-                    $('#admin-' + admin_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
+                    $('#admin-' + admin_id).html('<i style="font-size: 25px" class="mdi mdi-account-check" status="Active"></i> <h7>Approved</h7>');
                 }
             },
             error  : function() {
@@ -529,16 +532,6 @@ $(document).ready(function() {
 
 
     // Hide Courier Name and Tracking Number HTML input fields in admin/orders/order_details.blade.php in "Update Order Status" Section, and show them ONLY if the "Update Order Status" <select><option> (dropdown menu) is updated/changed (to 'Shipped' only) by an 'admin'    
-    $('#courier_name').hide();
-    $('#tracking_number').hide();
-    $('#order_status').on('change', function() {
-        if (this.value == 'Shipped') { // is the same as:    if ($(this).val() == 'Shipped') {
-            $('#courier_name').show();
-            $('#tracking_number').show();
-        } else {
-            $('#courier_name').hide();
-            $('#tracking_number').hide();
-        }
-    });
+ 
 
 }); // End of $(document).ready()

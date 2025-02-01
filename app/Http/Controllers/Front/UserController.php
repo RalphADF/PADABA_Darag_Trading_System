@@ -29,6 +29,8 @@ class UserController extends Controller
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                 // the 'name' HTML attribute of the request (the array key of the $request array) (ATTRIBUTE) => Validation Rules
                 'name'     => 'required|string|max:100',
+                'mname'     => 'nullable|string|max:100',
+                'lname'     => 'required|string|max:100',
                 'mobile'   => 'required|numeric|digits:11',
                 'email'    => 'required|email|max:150|unique:users', // 'unique:users'    means it's unique in the `users` table
                 'password' => 'required|min:6',
@@ -51,6 +53,8 @@ class UserController extends Controller
                 $user = new User;
 
                 $user->name     = $data['name'];   // $data['name']   comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
+                $user->mname     = $data['mname'];
+                $user->lname     = $data['lname'];
                 $user->mobile   = $data['mobile']; // $data['mobile'] comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
                 $user->email    = $data['email'];  // $data['email']  comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
                 $user->password = bcrypt($data['password']); // storing the HASH-ed password (not the original password) in the database    // bcrypt(): https://laravel.com/docs/9.x/helpers#method-bcrypt    // $data['password'] comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
@@ -70,7 +74,7 @@ class UserController extends Controller
                     'code'   => base64_encode($data['email']) // We base64 code the user's $email and send it as a Route Parameter from resources/views/emails/confirmation.blade.php to the 'user/confirm/{code}' route in web.php, then it gets base64 de-coded again in confirmUser() method in Front/UserController.php    // We will use the opposite: base64_decode() in the confirmUser() method to decode the encoded string (encode X decode)
                 ];
                 \Illuminate\Support\Facades\Mail::send('emails.confirmation', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.confirmation' is the resources/views/emails/confirmation.blade.php file that will be sent as an email    // We pass in all the variables that confirmation.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Confirm your Multi-vendor E-commerce Application Account');
+                    $message->to($email)->subject('Confirm your PADABA Customer Account');
                 });
 
                 // Redirect user back with a success message
@@ -150,7 +154,7 @@ class UserController extends Controller
 
  
                     // redirect user to the Cart cart.blade.php page
-                    $redirectTo = url('cart'); // Check that route in web.php
+                    $redirectTo = url('/'); // Check that route in web.php
 
                     // Here, we return a JSON response because the request is ORIGINALLY submitting an HTML <form> data using an AJAX request
                     return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
@@ -218,7 +222,7 @@ class UserController extends Controller
                     // 'code'   => base64_encode($data['email']) // We base64 code the user's $email and send it as a Route Parameter from user_confirmation.blade.php to the 'user/confirm/{code}' route in web.php, then it gets base64 decoded again in confirmUser() method in Front/UserController.php    // we will use the opposite: base64_decode() in the confirmAccount() method (encode X decode)
                 ];
                 \Illuminate\Support\Facades\Mail::send('emails.register', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.register' is the register.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that register.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Welcome to Multi-vendor E-commerce Application');
+                    $message->to($email)->subject('Welcome to PADABA Traders!');
                 });
 
                 // Note: Here, we have TWO options, either redirect user with a success message or Log the user In IMMDEIATELY, AUTOMATICALLY and DIRECTLY

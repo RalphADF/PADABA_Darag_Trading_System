@@ -2,7 +2,7 @@
 
 
     <!-- Form-Fields /- -->
-    <h4 class="section-h4 deliveryText">Add New Delivery Address</h4> {{-- We created that deliveryText CSS class to use the HTML element as a handle for jQuery to change the <h4> content when clicking the Edit button --}}
+    <h4 class="section-h4 deliveryText" style="color: black;">Add New Delivery Address</h4> {{-- We created that deliveryText CSS class to use the HTML element as a handle for jQuery to change the <h4> content when clicking the Edit button --}}
     <div class="u-s-m-b-24">
         <input type="checkbox" class="check-box" id="ship-to-different-address" data-toggle="collapse" data-target="#showdifferent">
 
@@ -41,29 +41,81 @@
                     <p id="delivery-delivery_address"></p>                                {{-- This <p> tag will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- We structure and use a certain pattern so that the <p> id pattern must be like: delivery-x (e.g. delivery-mobile, delivery-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="delivery-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                 </div>
             </div>
-            <div class="group-inline u-s-m-b-13">
-                <div class="group-1 u-s-p-r-16">
-                    <label for="delivery_city">City
-                        <span class="astk">*</span>
-                    </label>
-                    <input class="text-field" type="text" id="delivery_city" name="delivery_city">
-                    <p id="delivery-delivery_city"></p>                         {{-- This <p> tag will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- We structure and use a certain pattern so that the <p> id pattern must be like: delivery-x (e.g. delivery-mobile, delivery-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="delivery-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}                    
-                </div>
+            <div id="map" style="height: 300px;"></div>
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                <script>
+    const map = L.map('map').setView([10.7201, 122.5533], 15);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    // Add a draggable marker
+    const marker = L.marker([10.7201, 122.5533], { draggable: true }).addTo(map);
+
+    // Function to fetch and display address using OpenStreetMap's Nominatim API
+    function fetchAddress(lat, lng) {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.address) {
+                    const address = data.display_name || "Address not found";
+                    document.getElementById('delivery_address').value = address; // Update the address field
+                } else {
+                    document.getElementById('delivery_address').value = "Address not found";
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching address:", error);
+                document.getElementById('delivery_address').value = "Error fetching address";
+            });
+    }
+
+    // Update fields on marker drag
+    marker.on('dragend', function () {
+        const { lat, lng } = marker.getLatLng();
+        document.getElementById('delivery_state').value = lat;
+        document.getElementById('delivery_city').value = lng;
+        fetchAddress(lat, lng); // Fetch address
+    });
+
+    // Click to place marker
+    map.on('click', function (e) {
+        const { lat, lng } = e.latlng;
+        marker.setLatLng([lat, lng]);
+        document.getElementById('delivery_state').value = lat;
+        document.getElementById('delivery_city').value = lng;
+        fetchAddress(lat, lng); // Fetch address
+    });
+</script>
+
+            <div class="group-inline u-s-m-b-13" >
+
                 <div class="group-2">
-                    <label for="delivery_state">State
-                        <span class="astk">*</span>
+                    <label for="delivery_state">
                     </label>
-                    <input class="text-field" type="text" id="delivery_state" name="delivery_state">
+                    <input class="text-field" style="display: none" type="text" id="delivery_state" name="delivery_state">
                     <p id="delivery-delivery_state"></p>                        {{-- This <p> tag will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- We structure and use a certain pattern so that the <p> id pattern must be like: delivery-x (e.g. delivery-mobile, delivery-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="delivery-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}                    
                 </div>
+                <div class="group-1 u-s-p-r-16">
+                    <label for="delivery_city">
+                    </label>
+                    <input class="text-field" style="display: none" type="text" id="delivery_city" name="delivery_city">
+                    <p id="delivery-delivery_city"></p>                         {{-- This <p> tag will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- We structure and use a certain pattern so that the <p> id pattern must be like: delivery-x (e.g. delivery-mobile, delivery-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="delivery-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}                    
+                </div>
+                
             </div>
+            
             <div class="u-s-m-b-13">
-                <label for="select-country-extra">Country
+                <label for="select-country-extra">Municipality/District
                     <span class="astk">*</span>
                 </label>
                 <div class="select-box-wrapper">
                     <select class="select-box" id="delivery_country" name="delivery_country">
-                        <option value="">Select Country</option>
+                        <option value="">Select Municipality/District</option>
 
                         @foreach ($countries as $country) {{-- $countries was passed from UserController to view using compact() method --}}
                             <option value="{{ $country['country_name'] }}"  @if ($country['country_name'] == \Illuminate\Support\Facades\Auth::user()->country) selected @endif>{{ $country['country_name'] }}</option>
@@ -74,8 +126,8 @@
                 </div>
             </div>
             <div class="u-s-m-b-13">
-                <label for="delivery_pincode">Pincode
-                    <span class="astk">*</span>
+                <label for="delivery_pincode">Zip Code
+                    <span class="astk"></span>
                 </label>
                 <input class="text-field" type="text" id="delivery_pincode" name="delivery_pincode">
                 <p id="delivery-delivery_pincode"></p>                      {{-- This <p> tag will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- We structure and use a certain pattern so that the <p> id pattern must be like: delivery-x (e.g. delivery-mobile, delivery-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="delivery-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}                    

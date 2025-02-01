@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,11 +23,18 @@ require __DIR__.'/auth.php';
 // The website 'ADMIN' Section: Route Group for routes starting with the 'admin' word (Admin Route Group)    // NOTE: ALL THE ROUTES INSIDE THIS PREFIX STATRT WITH 'admin/', SO THOSE ROUTES INSIDE THE PREFIX, YOU DON'T WRITE '/admin' WHEN YOU DEFINE THEM, IT'LL BE DEFINED AUTOMATICALLY!!
 Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function() {
     Route::match(['get', 'post'], 'login', 'AdminController@login'); // match() method is used to use more than one HTTP request method for the same route, so GET for rendering the login.php page, and POST for the login.php page <form> submission (e.g. GET and POST)    // Matches the '/admin/dashboard' URL (i.e. http://127.0.0.1:8000/admin/dashboard)
+    Route::get('/admin/dashboard/pdf', [AdminController::class, 'downloadDashboardPDF'])->name('admin.dashboard.pdf');
+
+    Route::get('admin/admins/add_delivery_driver', [AdminController::class, 'addDeliveryDriverForm'])->name('admin.add_delivery_driver_form');
+    Route::post('admin/admins/save_delivery_driver', [AdminController::class, 'saveDeliveryDriver'])->name('admin.save_delivery_driver');
+
+
 
 
     // This a Route Group for routes that ALL start with 'admin/-something' and utilizes the 'admin' Authentication Guard    // Note: You must remove the '/admin'/ part from the routes that are written inside this Route Group (e.g.    Route::get('logout');    , NOT    Route::get('admin/logout');    )
     Route::group(['middleware' => ['admin']], function() { // using our 'admin' guard (which we created in auth.php)
         Route::get('dashboard', 'AdminController@dashboard'); // Admin login
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('logout', 'AdminController@logout'); // Admin logout
         Route::match(['get', 'post'], 'update-admin-password', 'AdminController@updateAdminPassword'); // GET request to view the update password <form>, and a POST request to submit the update password <form>
         Route::post('check-admin-password', 'AdminController@checkAdminPassword'); // Check Admin Password // This route is called from the AJAX call in admin/js/custom.js page
@@ -111,6 +118,7 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         // Orders
         // Render admin/orders/orders.blade.php page (Orders Management section) in the Admin Panel
         Route::get('orders', 'OrderController@orders');
+        
 
         // Render admin/orders/order_details.blade.php (View Order Details page) when clicking on the View Order Details icon in admin/orders/orders.blade.php (Orders tab under Orders Management section in Admin Panel)
         Route::get('orders/{id}', 'OrderController@orderDetails'); 
@@ -177,6 +185,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
 // User download order PDF invoice (We'll use the same viewPDFInvoice() function (but with different routes/URLs!) to render the PDF invoice for 'admin'-s in the Admin Panel and for the user to download it!) (we created this route outside outside the Admin Panel routes so that the user could use it!)
 Route::get('orders/invoice/download/{id}', 'App\Http\Controllers\Admin\OrderController@viewPDFInvoice');
+
+
 
 
 
@@ -256,6 +266,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 
     // Render the Contact Us page (front/pages/contact.blade.php) using GET HTTP Requests, or the HTML Form Submission using POST HTTP Requests
     Route::match(['get', 'post'], 'contact', 'CmsController@contact');
+    Route::match(['get', 'post'], 'about-us', 'CmsController@aboutus');
 
     // Add a Newsletter Subscriber email HTML Form Submission in front/layout/footer.blade.php when clicking on the Submit button (using an AJAX Request/Call)
     Route::post('add-subscriber-email', 'NewsletterController@addSubscriber');

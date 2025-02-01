@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 use App\Models\Product;
@@ -23,11 +24,12 @@ class ProductsController extends Controller
         // Modify the last $products variable so that ONLY products that BELONG TO the 'vendor' show up in (not ALL products show up) in products.blade.php, and also make sure that the 'vendor' account is active/enabled/approved (`status` is 1) before they can access the products page    
         $adminType = Auth::guard('admin')->user()->type;      // `type`      is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `type`      column in `admins` table    // https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
         $vendor_id = Auth::guard('admin')->user()->vendor_id; // `vendor_id` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `vendor_id` column in `admins` table    // https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
-        
+        $rsbsaNumber = Auth::guard('admin')->user()->rsbsaNumber;
+
         if ($adminType == 'vendor') { // if the authenticated user (the logged in user) is 'vendor', check his `status`
             $vendorStatus = Auth::guard('admin')->user()->status; // `status` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `status` column in `admins` table    // https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
             if ($vendorStatus == 0) { // if the 'vendor' is inactive/disabled
-                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your Vendor Account is not approved yet. Please make sure to fill your valid personal, business and bank details.'); // the error_message will appear to the vendor in the route: 'admin/update-vendor-details/personal' which is the update_vendor_details.blade.php page
+                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your Breeder Account is not approved yet. Please make sure to fill your valid personal, business and bank details.'); // the error_message will appear to the vendor in the route: 'admin/update-vendor-details/personal' which is the update_vendor_details.blade.php page
             }
         }
 
@@ -86,7 +88,7 @@ class ProductsController extends Controller
     public function addEditProduct(Request $request, $id = null) { // If the $id is not passed, this means 'Add a Product', if not, this means 'Edit the Product'    
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'products');
-
+        $rsbsaNumber = Auth::guard('admin')->user()->rsbsaNumber;
 
         if ($id == '') { // if there's no $id is passed in the route/URL parameters, this means 'Add a new product'
             $title = 'Add Product';
@@ -109,26 +111,27 @@ class ProductsController extends Controller
             $rules = [
                 'category_id'   => 'required',
                 'product_name'  => 'required', // only alphabetical characters and spaces
-                'product_code'  => 'required|regex:/^\w+$/', // alphanumeric regular expression
+                // 'product_code'  => 'required|regex:/^\w+$/', // alphanumeric regular expression
                 'product_price' => 'required|numeric',
-                'product_color' => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
+               // 'product_color' => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
             ];
 
             $customMessages = [ // Specifying A Custom Message For A Given Attribute: https://laravel.com/docs/9.x/validation#specifying-a-custom-message-for-a-given-attribute
                 'category_id.required'   => 'Category is required',
                 'product_name.required'  => 'Product Name is required',
                 'product_name.regex'     => 'Valid Product Name is required',
-                'product_code.required'  => 'Product Code is required',
-                'product_code.regex'     => 'Valid Product Code is required',
+               // 'product_code.required'  => 'Product Code is required',
+               // 'product_code.regex'     => 'Valid Product Code is required',
                 'product_price.required' => 'Product Price is required',
                 'product_price.numeric'  => 'Valid Product Price is required',
-                'product_color.required' => 'Product Color is required',
-                'product_color.regex'    => 'Valid Product Color is required',
+               // 'product_color.required' => 'Product Color is required',
+                //'product_color.regex'    => 'Valid Product Color is required',
 
             ];
 
             $this->validate($request, $rules, $customMessages);
 
+           
             // Upload Product Image after Resize
             // Important Note: There are going to be 3 three sizes for the product image: Admin will upload the image with the recommended size which 1000*1000 which is the 'large' size, but then we're going to use 'Intervention' package to get another two sizes: 500*500 which is the 'medium' size and 250*250 which is the 'small' size
             // The 3 three image sizes: large: 1000x1000, medium: 500x500, small: 250x250
@@ -189,7 +192,7 @@ class ProductsController extends Controller
             $product->section_id  = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
             $product->brand_id    = $data['brand_id'];
-            $product->group_code  = $data['group_code']; // Managing Product Colors (in front/products/detail.blade.php)
+            //$product->group_code  = $data['group_code']; // Managing Product Colors (in front/products/detail.blade.php)
 
             
             // Saving the seleted filter for a product
@@ -213,6 +216,7 @@ class ProductsController extends Controller
                 $adminType = Auth::guard('admin')->user()->type; // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Get the `type` column value of the `admins` table through Retrieving The Authenticated User (the logged in user) using the 'admin' guard which we defined in auth.php page: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
                 // dd($adminType);
                 $vendor_id = Auth::guard('admin')->user()->vendor_id; // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Get the `vendor_id` column value of the `admins` table through Retrieving The Authenticated User (the logged in user) using the 'admin' guard which we defined in auth.php page: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
+                $rsbsaNumber = Auth::guard('admin')->user()->rsbsaNumber;
                 $admin_id  = Auth::guard('admin')->user()->id; // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Get the `id` column value of the `admins` table through Retrieving The Authenticated User (the logged in user) using the 'admin' guard which we defined in auth.php page: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
 
                 $product->admin_type = $adminType;
@@ -220,6 +224,8 @@ class ProductsController extends Controller
 
                 if ($adminType == 'vendor') {
                     $product->vendor_id  = $vendor_id;
+                    $product->rsbsaNumber  = $rsbsaNumber;
+                    
                 } else {
                     $product->vendor_id = 0;
                 }
@@ -236,15 +242,33 @@ class ProductsController extends Controller
 
 
             $product->product_name     = $data['product_name'];
-            $product->product_code     = $data['product_code'];
-            $product->product_color    = $data['product_color'];
+            
+            if (empty($data['product_code'])) {
+                // Retrieve the authenticated vendor
+                $vendor = Auth::guard('admin')->user();
+                
+                // Check if rsbsaNumber is null
+                if (empty($vendor->rsbsaNumber)) {
+                    // If rsbsaNumber is null, use 'NM' + vendor ID + 6 random characters as the prefix
+                    $prefix = 'NM' . $vendor->id . '-' . Str::upper(Str::random(6));
+                } else {
+                    // Use rsbsaNumber as the prefix if it exists
+                    $prefix = $vendor->rsbsaNumber . '-' . Str::upper(Str::random(6));
+                }
+                
+                // Assign the product code
+                $product->product_code = $prefix;
+            } else {
+                $product->product_code = $data['product_code'];
+            }
+           // $product->product_color    = $data['product_color'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
             $product->product_weight   = $data['product_weight'];
             $product->description      = $data['description'];
-            $product->meta_title       = $data['meta_title'];
-            $product->meta_description = $data['meta_description'];
-            $product->meta_keywords    = $data['meta_keywords'];
+            //$product->meta_title       = $data['meta_title'];
+            //$product->meta_description = $data['meta_description'];
+           // $product->meta_keywords    = $data['meta_keywords'];
 
 
 
@@ -285,7 +309,7 @@ class ProductsController extends Controller
 
 
         // return view('admin.products.add_edit_product')->with(compact('title', 'product'));
-        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'brands'));
+        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'brands' , 'rsbsaNumber'));
     }
 
     public function deleteProductImage($id) { // AJAX call from admin/js/custom.js    // Delete the product image from BOTH SERVER (FILESYSTEM) & DATABASE    // $id is passed as a Route Parameter    
@@ -348,13 +372,13 @@ class ProductsController extends Controller
     public function addAttributes(Request $request, $id) { // Add/Edit Attributes function    
         Session::put('page', 'products');
 
-        $product = Product::select('id', 'product_name', 'product_code', 'product_color', 'product_price', 'product_image')->with('attributes')->find($id); // with('attributes') is the relationship method name in the Product.php model
+        $product = Product::select('id', 'product_name', 'rsbsaNumber', 'product_code', 'product_color', 'product_price', 'product_image')->with('attributes')->find($id); // with('attributes') is the relationship method name in the Product.php model
 
         if ($request->isMethod('post')) { // When the <form> is submitted
             $data = $request->all();
             // dd($data);
 
-            foreach ($data['sku'] as $key => $value) { // or instead could be: $data['size'], $data['price'] or $data['stock']
+            foreach ($data['size'] as $key => $value) { // or instead could be: $data['size'], $data['price'] or $data['stock']
                 // echo '<pre>', var_dump($key), '</pre>';
                 // echo '<pre>', var_dump($value), '</pre>';
                 
@@ -362,15 +386,7 @@ class ProductsController extends Controller
                     // Validation:
                     // SKU duplicate check (Prevent duplicate SKU) because SKU is UNIQUE for every product
                     $skuCount = ProductsAttribute::where('sku', $value)->count();
-                    if ($skuCount > 0) { // if there's an SKU for the product ALREADY EXISTING
-                        return redirect()->back()->with('error_message', 'SKU already exists! Please add another SKU!');
-                    }
-
-                    // Size duplicate check (Prevent duplicate Size) because Size is UNIQUE for every product
-                    $sizeCount = ProductsAttribute::where(['product_id' => $id, 'size' => $data['size'][$key]])->count();
-                    if ($sizeCount > 0) { // if there's an SKU for the product ALREADY EXISTING
-                        return redirect()->back()->with('error_message', 'Size already exists! Please add another Size!');
-                    }
+                    
 
 
                     $attribute = new ProductsAttribute;
@@ -392,27 +408,6 @@ class ProductsController extends Controller
         return view('admin.attributes.add_edit_attributes')->with(compact('product'));
     }
 
-    public function updateAttributeStatus(Request $request) { // Update Attribute Status using AJAX in add_edit_attributes.blade.php
-        if ($request->ajax()) { // if the request is coming via an AJAX call
-            $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
-            // dd($data);
-
-            if ($data['status'] == 'Active') { // $data['status'] comes from the 'data' object inside the $.ajax() method    // reverse the 'status' from (ative/inactive) 0 to 1 and 1 to 0 (and vice versa)
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-
-            ProductsAttribute::where('id', $data['attribute_id'])->update(['status' => $status]); // $data['attribute_id'] comes from the 'data' object inside the $.ajax() method
-
-            return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
-                'status'       => $status,
-                'attribute_id' => $data['attribute_id']
-            ]);
-        }
-    }
-
     public function editAttributes(Request $request) {
         Session::put('page', 'products');
 
@@ -432,6 +427,27 @@ class ProductsController extends Controller
             }
 
             return redirect()->back()->with('success_message', 'Product Attributes have been updated successfully!');
+        }
+    }
+
+    public function updateAttributeStatus(Request $request) { // Update Attribute Status using AJAX in add_edit_attributes.blade.php
+        if ($request->ajax()) { // if the request is coming via an AJAX call
+            $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
+            // dd($data);
+
+            if ($data['status'] == 'Active') { // $data['status'] comes from the 'data' object inside the $.ajax() method    // reverse the 'status' from (ative/inactive) 0 to 1 and 1 to 0 (and vice versa)
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+
+
+            ProductsAttribute::where('id', $data['attribute_id'])->update(['status' => $status]); // $data['attribute_id'] comes from the 'data' object inside the $.ajax() method
+
+            return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
+                'status'       => $status,
+                'attribute_id' => $data['attribute_id']
+            ]);
         }
     }
 
@@ -549,4 +565,6 @@ class ProductsController extends Controller
         return redirect()->back()->with('success_message', $message);
     }
 
+
+    
 }

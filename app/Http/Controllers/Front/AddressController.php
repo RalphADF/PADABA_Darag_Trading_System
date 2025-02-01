@@ -40,12 +40,12 @@ class AddressController extends Controller
             // Manually Creating Validators: https://laravel.com/docs/9.x/validation#manually-creating-validators
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                 'delivery_name'    => 'required|string|max:100',   // string: https://laravel.com/docs/9.x/validation#rule-string    // max:value: https://laravel.com/docs/9.x/validation#rule-max
-                'delivery_address' => 'required|string|max:100',   // string: https://laravel.com/docs/9.x/validation#rule-string    // max:value: https://laravel.com/docs/9.x/validation#rule-max
+                'delivery_address' => 'required|string|max:255',   // string: https://laravel.com/docs/9.x/validation#rule-string    // max:value: https://laravel.com/docs/9.x/validation#rule-max
                 'delivery_city'    => 'required|string|max:100',   // string: https://laravel.com/docs/9.x/validation#rule-string    // max:value: https://laravel.com/docs/9.x/validation#rule-max
                 'delivery_state'   => 'required|string|max:100',   // string: https://laravel.com/docs/9.x/validation#rule-string    // max:value: https://laravel.com/docs/9.x/validation#rule-max
                 'delivery_country' => 'required|string|max:100',   // string: https://laravel.com/docs/9.x/validation#rule-string    // max:value: https://laravel.com/docs/9.x/validation#rule-max
-                'delivery_pincode' => 'required|digits:6',         // digits:value: https://laravel.com/docs/9.x/validation#rule-digits
-                'delivery_mobile'  => 'required|numeric|digits:10' // digits:value: https://laravel.com/docs/9.x/validation#rule-digits
+                'delivery_pincode' => 'nullable|numeric|max:999999',         // digits:value: https://laravel.com/docs/9.x/validation#rule-digits
+                'delivery_mobile'  => 'required|numeric|digits:11' // digits:value: https://laravel.com/docs/9.x/validation#rule-digits
             ]);
 
             if ($validator->passes()) { // if the user passes validation, add a new (INSERT) or edit (UPDATE) the delivery address

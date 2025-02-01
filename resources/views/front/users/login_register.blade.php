@@ -64,7 +64,7 @@
                 <!-- Login -->
                 <div class="col-lg-6">
                     <div class="login-wrapper">
-                        <h2 class="account-h2 u-s-m-b-20">Login</h2>
+                        <h2 class="account-h2 u-s-m-b-20"style="color:black;">Login</h2>
                         <h6 class="account-h6 u-s-m-b-30">Welcome back! Sign in to your account.</h6>
 
 
@@ -127,7 +127,7 @@
                 <!-- Register -->
                 <div class="col-lg-6">
                     <div class="reg-wrapper">
-                        <h2 class="account-h2 u-s-m-b-20">Register</h2>
+                        <h2 class="account-h2 u-s-m-b-20" style="color:black;">Register</h2>
                         <h6 class="account-h6 u-s-m-b-30">Registering for this site allows you to access your order status and history.</h6>
 
 
@@ -144,10 +144,26 @@
 
 
                             <div class="u-s-m-b-30">
-                                <label for="username">Name
+                                <label for="username">First Name
                                     <span class="astk">*</span>
                                 </label>
-                                <input type="text" id="user-name" class="text-field" placeholder="User Name" name="name">
+                                <input type="text" id="user-name" class="text-field" placeholder="First Name" name="name">
+                                {{-- <p id="register-name" style="color: red"></p> --}} {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
+                                <p id="register-name"></p> {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
+                            </div>
+                            <div class="u-s-m-b-30">
+                                <label for="username">Middle Name
+                                    <span class="astk">*</span>
+                                </label>
+                                <input type="text" id="user-name" class="text-field" placeholder="First Name" name="mname">
+                                {{-- <p id="register-name" style="color: red"></p> --}} {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
+                                <p id="register-name"></p> {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
+                            </div>
+                            <div class="u-s-m-b-30">
+                                <label for="username">Last Name
+                                    <span class="astk">*</span>
+                                </label>
+                                <input type="text" id="user-name" class="text-field" placeholder="First Name" name="lname">
                                 {{-- <p id="register-name" style="color: red"></p> --}} {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                                 <p id="register-name"></p> {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                             </div>
@@ -178,11 +194,119 @@
                             <div class="u-s-m-b-30"> {{-- "I've read and accept the terms & conditions" Checkbox --}}
                                 <input type="checkbox" class="check-box" id="accept" name="accept">
                                 <label class="label-text no-color" for="accept">I’ve read and accept the
-                                    <a href="terms-and-conditions.html" class="u-c-brand">terms & conditions</a>
+                                <a href="#" class="u-c-brand" onclick="openPopup()">terms & conditions</a>
                                 </label>
-                                {{-- <p id="register-accept" style="color: red"></p> --}} {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
-                                <p id="register-accept"></p> {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                             </div>
+                            <script>
+                            function openPopup() {
+                                const popup = window.open("", "Terms and Conditions", "width=800,height=600,resizable=yes,scrollbars=yes");
+                                popup.document.write(`
+                                    <!DOCTYPE html>
+                                    <html>
+                                    <head>
+                                        <title>Terms and Conditions for Customer Registration</title>
+                                        <style>
+                                            body {
+                                                font-family: Arial, sans-serif;
+                                                padding: 20px;
+                                                line-height: 1.6;
+                                            }
+                                            h1, h2 {
+                                                color: #333;
+                                            }
+                                            p, li {
+                                                margin-bottom: 10px;
+                                            }
+                                            ul {
+                                                padding-left: 20px;
+                                            }
+                                            hr {
+                                                border: none;
+                                                border-top: 1px solid #ddd;
+                                                margin: 20px 0;
+                                            }
+                                        </style>
+                                    </head>
+                                    <body>
+                                        <h1>Terms and Conditions for Customer Registration</h1>
+                                        
+                                        <p>Welcome to PADABA Trading System. By registering as a customer on our platform, you agree to abide by the following terms and conditions. Please read them carefully before completing your registration.</p>
+
+                                        <hr>
+
+                                        <h2>1. Eligibility</h2>
+                                        <ul>
+                                            <li>1.1 You must be at least 18 years old to register as a customer.</li>
+                                            <li>1.2 You agree to provide accurate, complete, and up-to-date information during registration.</li>
+                                        </ul>
+
+                                        <h2>2. Account Responsibilities</h2>
+                                        <ul>
+                                            <li>2.1 You are responsible for maintaining the confidentiality of your account credentials.</li>
+                                            <li>2.2 Any activity conducted through your account will be considered your responsibility. Notify us immediately of any unauthorized access.</li>
+                                        </ul>
+
+                                        <h2>3. Product Purchases</h2>
+                                        <ul>
+                                            <li>3.1 You agree to review product descriptions carefully before making any purchase.</li>
+                                            <li>3.2 You are responsible for providing accurate delivery information for the successful fulfillment of your order.</li>
+                                            <li>3.3 All purchases must comply with applicable laws and regulations.</li>
+                                        </ul>
+
+                                        <h2>4. Payments and Fees</h2>
+                                        <ul>
+                                            <li>4.1 You agree to pay for all items purchased in accordance with the pricing outlined on the platform.</li>
+                                            <li>4.2 Payments will be processed according to the payment method selected during checkout.</li>
+                                            <li>4.3 Any applicable taxes, fees, or additional charges will be added to the total purchase price.</li>
+                                        </ul>
+
+                                        <h2>5. Order Fulfillment and Returns</h2>
+                                        <ul>
+                                            <li>5.1 PADABA Trading System strives to ensure timely order fulfillment, but we are not responsible for delays caused by third parties or circumstances beyond our control.</li>
+                                            <li>5.2 Our return and refund policies must be followed for any order returns or disputes.</li>
+                                        </ul>
+
+                                        <h2>6. Prohibited Activities</h2>
+                                        <ul>
+                                            <li>6.1 Customers must not engage in fraudulent activities, including the use of false information or unauthorized payment methods.</li>
+                                            <li>6.2 Any violation of these terms may result in account suspension or termination.</li>
+                                        </ul>
+
+                                        <h2>7. Intellectual Property</h2>
+                                        <ul>
+                                            <li>7.1 You acknowledge that all trademarks, logos, and other intellectual property associated with the products listed on the platform are owned by their respective entities.</li>
+                                            <li>7.2 You agree not to infringe on the intellectual property rights of PADABA Trading System or third-party entities.</li>
+                                        </ul>
+
+                                        <h2>8. Termination</h2>
+                                        <ul>
+                                            <li>8.1 We reserve the right to terminate your customer account at any time for breaches of these terms or other violations of our policies.</li>
+                                        </ul>
+
+                                        <h2>9. Liability and Indemnification</h2>
+                                        <ul>
+                                            <li>9.1 PADABA Trading System is not liable for any disputes arising between customers and breeders or third parties.</li>
+                                            <li>9.2 You agree to indemnify and hold harmless PADABA Trading System from any claims or damages arising from your use of the platform.</li>
+                                        </ul>
+
+                                        <h2>10. Amendments</h2>
+                                        <ul>
+                                            <li>10.1 We reserve the right to amend these terms and conditions at any time. Continued use of the platform constitutes your acceptance of any changes.</li>
+                                        </ul>
+
+                                        <h2>11. Governing Law</h2>
+                                        <ul>
+                                            <li>11.1 These terms and conditions are governed by the laws of the Philippines.</li>
+                                        </ul>
+
+                                        <p>By clicking "Register," you confirm that you have read, understood, and agree to these terms and conditions.</p>
+                                    </body>
+                                    </html>
+                                `);
+                                popup.document.close();
+                            }
+
+                            </script>
 
                             <div class="u-s-m-b-45">
                                 <button class="button button-primary w-100">Register</button>

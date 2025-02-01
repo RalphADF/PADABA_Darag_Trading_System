@@ -77,4 +77,16 @@ Route::namespace('App\Http\Controllers\API')->group(function() { // Route Groups
 
     // Webhook: Update the stock by giving this API endpoint to a third-party inventory/stock management system (like Uniware Cloud Inventory Control, ...) to access to update our stock (POST)    // Here, the third-party stock/inventory management system (Webhook) accesses our API endpoint only when there's a stock update on their end (the stock/inventory management system's end) to update our stock on our end in our database    // API Endpoint:    POST http://127.0.0.1:8000/api/update-stock-with-webhook    // The user must send this 'Authorization' HTTP Header value i.e. Bearer Access Token with their HTTP Request: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFtaXQgR3VwdGEiLCJpYXQiOjE1MTYyMzkwMjJ9.cNrgi6Sso9wvs4GlJmFnA4IqJY4o2QEcKXgshJTjfNg'    
     Route::post('update-stock-with-webhook', 'APIController@updateStockWithWebhook');
+
+    Route::get('/vendor-coordinates/{vendorId}', function($vendorId) {
+        $vendor = \App\Models\VendorsBusinessDetail::where('vendor_id', $vendorId)->first();
+        if ($vendor) {
+            return response()->json([
+                'shop_pincode' => $vendor->shop_pincode,
+                'shop_state' => $vendor->shop_state
+            ]);
+        }
+        return response()->json(['error' => 'Vendor not found'], 404);
+    });
+    
 });

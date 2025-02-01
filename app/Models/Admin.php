@@ -26,14 +26,16 @@ class Admin extends Authenticatable
     // An admin belongs to a vendor (the inverse of the relationship)
 
     public function vendorPersonal() { // relationship between `admins` and `vendors` table
-        return $this->belongsTo('App\Models\Vendor', 'vendor_id'); // 'vendor_id' is the foreign key of the `admins` table
+        return $this->hasOne('App\Models\Vendor', 'id'); // 'vendor_id' is the foreign key of the `admins` table
     }
 
     public function vendorBusiness() { // relationship between `admins` and `vendors_business_details` table
-        return $this->belongsTo('App\Models\VendorsBusinessDetail', 'vendor_id'); // 'vendor_id' is the foreign key of the `admins` table
+        return $this->hasOne('App\Models\VendorsBusinessDetail', 'vendor_id'); // 'vendor_id' is the foreign key of the `admins` table
+        return $this->hasOne(VendorsBusinessDetail::class, 'vendor_id', 'id');
     }
 
     public function vendorBank() { // relationship between `admins` and `vendors_bank_details` table
-        return $this->belongsTo('App\Models\VendorsBankDetail', 'vendor_id'); // 'vendor_id' is the foreign key of the `admins` table
+        return $this->hasOne('App\Models\VendorsBankDetail', 'vendor_id'); // 'vendor_id' is the foreign key of the `admins` table
     }
+    
 }

@@ -31,7 +31,7 @@
                             <div class="table-responsive pt-3">
                                 {{-- DataTable --}}
                                 <table id="banners" class="table table-bordered"> {{-- using the id here for the DataTable --}}
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
                                             <th>ID</th>
                                             <th>Image</th>
@@ -48,7 +48,7 @@
                                             <tr>
                                                 <td>{{ $banner['id'] }}</td>
                                                 <td>
-                                                    <img style="width: 180px" src="{{ asset('front/images/banner_images/' . $banner['image']) }}">
+                                                    <img style="width: 100px; height: 100px;" src="{{ asset('front/images/banner_images/' . $banner['image']) }}">
                                                 </td>
                                                 <td>{{ $banner['type'] }}</td>
                                                 <td>{{ $banner['link'] }}</td>
@@ -92,7 +92,7 @@
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights reserved.</span>
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block"></span>
             </div>
         </footer>
         <!-- partial -->

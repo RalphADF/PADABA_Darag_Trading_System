@@ -53,7 +53,6 @@
         			    <strong>Shipped To:</strong><br>
                         {{ $orderDetails['name'] }}<br>
                         {{ $orderDetails['address'] }}<br>
-                        {{ $orderDetails['city'] }}, {{ $orderDetails['state'] }}<br>
                         {{ $orderDetails['country'] }}-{{ $orderDetails['pincode'] }}<br>
                         {{ $userDetails['mobile'] }}<br>
     				</address>
@@ -85,11 +84,10 @@
     			<div class="panel-body">
     				<div class="table-responsive">
     					<table class="table table-condensed">
-    						<thead>
+    						<thead class="thead-dark">
                                 <tr>
         							<td><strong>Product Code</strong></td>
-        							<td class="text-center"><strong>Size</strong></td>
-        							<td class="text-center"><strong>Color</strong></td>
+        							<td class="text-center"><strong>Weight (kg)</strong></td>
         							<td class="text-center"><strong>Price</strong></td>
         							<td class="text-center"><strong>Quantity</strong></td>
         							<td class="text-right"><strong>Totals</strong></td>
@@ -115,10 +113,9 @@
                                             @endphp
                                         </td>
                                         <td class="text-center">{{ $product['product_size'] }}</td>
-                                        <td class="text-center">{{ $product['product_color'] }}</td>
-                                        <td class="text-center">INR {{ $product['product_price'] }}</td>
+                                        <td class="text-center">PHP {{ $product['product_price'] }}</td>
                                         <td class="text-center">{{ $product['product_qty'] }}</td>
-                                        <td class="text-right">INR {{ $product['product_price'] * $product['product_qty'] }}</td>
+                                        <td class="text-right">PHP {{ $product['product_price'] * $product['product_qty'] }}</td>
                                     </tr>
 
                                     {{-- Continue: Calculate the Subtotal --}}
@@ -133,7 +130,7 @@
                                     <td class="thick-line"></td>
                                     <td class="thick-line"></td>
                                     <td class="thick-line text-right"><strong>Subtotal</strong></td>
-                                    <td class="thick-line text-right">INR {{ $subTotal }}</td>
+                                    <td class="thick-line text-right">PHP {{ $subTotal }}</td>
                                 </tr>
                                 <tr>
                                     <td class="no-line"></td>
@@ -141,7 +138,7 @@
                                     <td class="no-line"></td>
                                     <td class="no-line"></td>
                                     <td class="no-line text-right"><strong>Shipping Charges</strong></td>
-                                    <td class="no-line text-right">INR 0</td>
+                                    <td class="no-line text-right">PHP {{$orderDetails['shipping_charges']}}</td>
                                 </tr>
                                 <tr>
                                     <td class="no-line"></td>
@@ -150,12 +147,10 @@
                                     <td class="no-line"></td>
                                     <td class="no-line text-right"><strong>Grand Total</strong></td>
                                     <td class="no-line text-right">
-                                        <strong>INR {{ $orderDetails['grand_total'] }}</strong>
+                                        <strong>PHP {{ $orderDetails['grand_total'] }}</strong>
                                         <br>
 
-                                        @if ($orderDetails['payment_method'] == 'COD')
-                                            <font color=red>(Already Paid)</font>
-                                        @endif
+                                        
                                     </td>
                                 </tr>
     						</tbody>

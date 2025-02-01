@@ -1,4 +1,3 @@
-
 {{-- This page is rendered by orderDetails() method inside Admin/OrderController.php --}}
 @extends('admin.layout.layout')
 
@@ -8,20 +7,21 @@
         <div class="content-wrapper">
 
 
-            {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}    
+            {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
             {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-            @if (Session::has('error_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+            @if (Session::has('error_message'))
+                <!-- Check AdminController.php, updateAdminPassword() method -->
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <strong>Error:</strong> {{ Session::get('error_message') }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
 
 
 
-            {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}    
+            {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{-- <strong>Error:</strong> {{ Session::get('error_message') }} --}}
@@ -31,21 +31,22 @@
                     @endforeach
 
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
 
 
-            {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}} 
+            {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
             {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
             {{-- Our Bootstrap success message in case of updating admin password is successful: --}}
             {{-- Displaying Success Message --}}
-            @if (Session::has('success_message')) <!-- Check vendorRegister() method in Front/VendorController.php -->
+            @if (Session::has('success_message'))
+                <!-- Check vendorRegister() method in Front/VendorController.php -->
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>Success:</strong> {{ Session::get('success_message') }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
@@ -61,17 +62,7 @@
                         </div>
                         <div class="col-12 col-xl-4">
                             <div class="justify-content-end d-flex">
-                                <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                                    <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <i class="mdi mdi-calendar"></i> Today (10 Jan 2021)
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                                        <a class="dropdown-item" href="#">January - March</a>
-                                        <a class="dropdown-item" href="#">March - June</a>
-                                        <a class="dropdown-item" href="#">June - August</a>
-                                        <a class="dropdown-item" href="#">August - November</a>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -96,11 +87,11 @@
                             </div>
                             <div class="form-group" style="height: 15px">
                                 <label style="font-weight: 550">Order Total: </label>
-                                <label>EGP{{ $orderDetails['grand_total'] }}</label>
+                                <label>₱{{ $orderDetails['grand_total'] }}</label>
                             </div>
                             <div class="form-group" style="height: 15px">
                                 <label style="font-weight: 550">Shipping Charges: </label>
-                                <label>EGP{{ $orderDetails['shipping_charges'] }}</label>
+                                <label>₱{{ $orderDetails['shipping_charges'] }}</label>
                             </div>
 
                             @if (!empty($orderDetails['coupon_code']))
@@ -110,8 +101,8 @@
                                 </div>
                                 <div class="form-group" style="height: 15px">
                                     <label style="font-weight: 550">Coupon Amount: </label>
-                                    <label>EGP{{ $orderDetails['coupon_amount'] }}</label>
-                                </div>                                
+                                    <label>₱{{ $orderDetails['coupon_amount'] }}</label>
+                                </div>
                             @endif
 
                             <div class="form-group" style="height: 15px">
@@ -131,7 +122,8 @@
                             <h4 class="card-title">Customer Details</h4>
                             <div class="form-group" style="height: 15px">
                                 <label style="font-weight: 550">Name: </label>
-                                <label>{{ $userDetails['name'] }}</label>
+                                <label>{{ $userDetails['name'] }} {{ $userDetails['mname'] ?? '' }}
+                                    {{ $userDetails['lname'] ?? '' }}</label>
                             </div>
 
                             @if (!empty($userDetails['address']))
@@ -154,17 +146,17 @@
                                     <label>{{ $userDetails['state'] }}</label>
                                 </div>
                             @endif
-                            
+
                             @if (!empty($userDetails['country']))
                                 <div class="form-group" style="height: 15px">
                                     <label style="font-weight: 550">Country: </label>
                                     <label>{{ $userDetails['country'] }}</label>
                                 </div>
                             @endif
-                            
+
                             @if (!empty($userDetails['pincode']))
                                 <div class="form-group" style="height: 15px">
-                                    <label style="font-weight: 550">Pincode: </label>
+                                    <label style="font-weight: 550">Zip Code: </label>
                                     <label>{{ $userDetails['pincode'] }}</label>
                                 </div>
                             @endif
@@ -190,36 +182,26 @@
                             </div>
 
                             @if (!empty($orderDetails['address']))
-                                <div class="form-group" style="height: 15px">
-                                    <label style="font-weight: 550">Address: </label>
-                                    <label>{{ $orderDetails['address'] }}</label>
+                                <div class="form-group"
+                                    style="min-height: 15px; word-wrap: break-word; overflow-wrap: break-word;">
+                                    <label style="font-weight: 550; display: inline-block; width: auto;">Address: </label>
+                                    <span
+                                        style="display: inline-block; width: 100%; word-wrap: break-word;">{{ $orderDetails['address'] }}</span>
                                 </div>
                             @endif
 
-                            @if (!empty($orderDetails['city']))
-                                <div class="form-group" style="height: 15px">
-                                    <label style="font-weight: 550">City: </label>
-                                    <label>{{ $orderDetails['city'] }}</label>
-                                </div>
-                            @endif
 
-                            @if (!empty($orderDetails['state']))
-                                <div class="form-group" style="height: 15px">
-                                    <label style="font-weight: 550">State: </label>
-                                    <label>{{ $orderDetails['state'] }}</label>
-                                </div>
-                            @endif
-                            
+
                             @if (!empty($orderDetails['country']))
                                 <div class="form-group" style="height: 15px">
-                                    <label style="font-weight: 550">Country: </label>
+                                    <label style="font-weight: 550">Municipality/District: </label>
                                     <label>{{ $orderDetails['country'] }}</label>
                                 </div>
                             @endif
-                            
+
                             @if (!empty($orderDetails['pincode']))
                                 <div class="form-group" style="height: 15px">
-                                    <label style="font-weight: 550">Pincode: </label>
+                                    <label style="font-weight: 550">Zip Code: </label>
                                     <label>{{ $orderDetails['pincode'] }}</label>
                                 </div>
                             @endif
@@ -228,36 +210,76 @@
                                 <label style="font-weight: 550">Mobile: </label>
                                 <label>{{ $orderDetails['mobile'] }}</label>
                             </div>
+
+
+
                         </div>
+
                     </div>
+
                 </div>
+
                 <div class="col-md-6 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Update Order Status</h4>  {{-- determined by 'admin'-s ONLY, not 'vendor'-s --}}
 
-                            {{-- Allowing the general "Update Order Status" feature for 'admin'-s ONLY, and restricting it from 'vendor'-s ('vendor'-s can update their Ordered Products item statuses ONLY (at this page bottom)) --}} 
-                            @if (Auth::guard('admin')->user()->type != 'vendor') {{-- If the authenticated/logged-in user is 'admin', allow "Update Order Status" feature --}} {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}} {{-- Retrieving The Authenticated User: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user --}}
-                                
+
+
+                            <br>
+                            <h4 class="card-title">Update Order Status</h4> {{-- determined by 'admin'-s ONLY, not 'vendor'-s --}}
+
+                            {{-- Allowing the general "Update Order Status" feature for 'admin'-s ONLY, and restricting it from 'vendor'-s ('vendor'-s can update their Ordered Products item statuses ONLY (at this page bottom)) --}}
+                            @if (Auth::guard('admin')->user()->type != 'vendor')
+                                {{-- If the authenticated/logged-in user is 'admin', allow "Update Order Status" feature --}} {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}} {{-- Retrieving The Authenticated User: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user --}}
+
                                 {{-- Note: The `order_statuses` table contains all kinds of order statuses (that can be updated by 'admin'-s ONLY in `orders` table) like: pending, in progress, shipped, canceled, ...etc. In `order_statuses` table, the `name` column can be: 'New', 'Pending', 'Canceled', 'In Progress', 'Shipped', 'Partially Shipped', 'Delivered', 'Partially Delivered' and 'Paid'. 'Partially Shipped': If one order has products from different vendors, and one vendor has shipped their product to the customer while other vendor (or vendors) didn't!. 'Partially Delivered': if one order has products from different vendors, and one vendor has shipped and DELIVERED their product to the customer while other vendor (or vendors) didn't!    // The `order_item_statuses` table contains all kinds of order statuses (that can be updated by both 'vendor'-s and 'admin'-s in `orders_products` table) like: pending, in progress, shipped, canceled, ...etc. --}}
-                                <form action="{{ url('admin/update-order-status') }}" method="post">  {{-- determined by 'admin'-s ONLY, not 'vendor'-s. This is in contrast to 'Order Item Status' which can be updated by both 'vendor'-s and 'admin'-s --}}
-                                    @csrf {{-- Preventing CSRF Requests: https://laravel.com/docs/9.x/csrf#preventing-csrf-requests --}}
+                                <form action="{{ url('admin/update-order-status') }}" method="post">
+                                    @csrf {{-- Preventing CSRF Requests --}}
 
                                     <input type="hidden" name="order_id" value="{{ $orderDetails['id'] }}">
 
+                                    {{-- Order Status --}}
+                                    <label for="order_status">Order Status:</label>
                                     <select name="order_status" id="order_status" required>
                                         <option value="" selected>Select</option>
                                         @foreach ($orderStatuses as $status)
-                                            <option value="{{ $status['name'] }}"  @if (!empty($orderDetails['order_status']) && $orderDetails['order_status'] == $status['name']) selected @endif>{{ $status['name'] }}</option>
+                                            <option value="{{ $status['name'] }}"
+                                                @if (!empty($orderDetails['order_status']) && $orderDetails['order_status'] == $status['name']) selected @endif>
+                                                {{ $status['name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select><br>
+
+                                    {{-- Delivery Schedule --}}
+                                    <label for="delivery_schedule">Set Delivery Schedule:</label>
+                                    <input style="width: 140px" type="date" name="delivery_schedule"
+                                        id="delivery_schedule" min="{{ \Carbon\Carbon::tomorrow()->format('Y-m-d') }}"
+                                        value="{{ !empty($orderDetails['delivery_schedule']) ? \Carbon\Carbon::parse($orderDetails['delivery_schedule'])->format('Y-m-d') : '' }}">
+                                    <br>
+
+                                    {{-- Courier Name --}}
+                                    <label for="courier_name">Select Courier:</label>
+                                    <select name="courier_name" id="courier_name">
+                                        <option value="">Select Courier</option>
+                                        @foreach (\App\Models\Admin::where('type', 'subadmin')->get() as $subadmin)
+                                            @php
+                                                $fullName = trim(
+                                                    $subadmin->name . ' ' . $subadmin->mname . ' ' . $subadmin->lname,
+                                                );
+                                            @endphp
+                                            <option value="{{ $fullName }}"
+                                                @if (!empty($orderDetails['courier_name']) && $orderDetails['courier_name'] == $fullName) selected @endif>
+                                                {{ $fullName }}
+                                            </option>
                                         @endforeach
                                     </select>
+                                    <br>
 
-                                    {{-- // Note: There are two types of Shipping Process: "manual" and "automatic". "Manual" is in the case like small businesses, where the courier arrives at the owner warehouse to to pick up the order for shipping, and the small business owner takes the shipment details (like courier name, tracking number, ...) from the courier, and inserts those details themselves in the Admin Panel when they "Update Order Status" Section (by an 'admin') or "Update Item Status" Section (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php). With "automatic" shipping process, we're integrating third-party APIs and orders go directly to the shipping partner, and the updates comes from the courier's end, and orders are automatically delivered to customers --}}
-                                    <input type="text" name="courier_name"    id="courier_name"    placeholder="Courier Name">    {{-- This input field will only show up when 'Shipped' <option> is selected. Check admin/js/custom.js --}}
-                                    <input type="text" name="tracking_number" id="tracking_number" placeholder="Tracking Number"> {{-- This input field will only show up when 'Shipped' <option> is selected. Check admin/js/custom.js --}}
-
+                                    {{-- Submit Button --}}
                                     <button type="submit">Update</button>
                                 </form>
+
+
                                 <br>
 
                                 {{-- Show the "Update Order Status" History/Log in admin/orders/order_details.blade.php     --}}
@@ -273,16 +295,20 @@
                                     <strong>{{ $log['order_status'] }}</strong>
 
                                     {{-- Shiprocket API integration --}}
-                                    @if ($orderDetails['is_pushed'] == 1) {{-- If the Order has been pushed to Shiprocket, state this --}}
+                                    @if ($orderDetails['is_pushed'] == 1)
+                                        {{-- If the Order has been pushed to Shiprocket, state this --}}
                                         <span style="color: green">(Order Pushed to Shiprocket)</span>
                                     @endif
 
                                     {{-- Note: There are two types of Shipping Process: "manual" and "automatic". "Manual" is in the case like small businesses, where the courier arrives at the owner warehouse to to pick up the order for shipping, and the small business owner takes the shipment details (like courier name, tracking number, ...) from the courier, and inserts those details themselves in the Admin Panel when they "Update Order Status" Section (by an 'admin') or "Update Item Status" Section (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php). With "automatic" shipping process, we're integrating third-party APIs and orders go directly to the shipping partner, and the updates comes from the courier's end, and orders are automatically delivered to customers --}}
 
                                     {{-- Show if the order status previewed in "Update Order Status" Section in admin/orders/order_details.blade.php is whether updated from "Update Item Status" Section (which can updated by either `vendor`-s or `admin`-s) (in case the `order_item_id` column is NOT zero 0 (it is 0 zero in case of updated by `admin`-s only in the "Update Order Status" Section)) or from "Update Order Status" Section (can be updated by `admin`-s ONLY). Check updateOrderItemStatus() method in Admin/OrderController.php     --}}
-                                    @if (isset($log['order_item_id']) && $log['order_item_id'] > 0) {{-- In case the "Item Status" Section is updated by a 'vendor' or 'admin', the `order_item_id` column in `orders_logs` table references (is a foreign key to) the `id` column in `orders_products` table, otherwise, it takes 0 zero as a value (in case of 'admin'). Check updateOrderItemStatus() method in Admin/OrderController.php --}}
+                                    @if (isset($log['order_item_id']) && $log['order_item_id'] > 0)
+                                        {{-- In case the "Item Status" Section is updated by a 'vendor' or 'admin', the `order_item_id` column in `orders_logs` table references (is a foreign key to) the `id` column in `orders_products` table, otherwise, it takes 0 zero as a value (in case of 'admin'). Check updateOrderItemStatus() method in Admin/OrderController.php --}}
                                         @php
-                                            $getItemDetails = \App\Models\OrdersLog::getItemDetails($log['order_item_id']);
+                                            $getItemDetails = \App\Models\OrdersLog::getItemDetails(
+                                                $log['order_item_id'],
+                                            );
                                         @endphp
                                         - for item {{ $getItemDetails['product_code'] }}
 
@@ -295,7 +321,6 @@
                                             <br>
                                             <span>Tracking Number: {{ $getItemDetails['tracking_number'] }}</span>
                                         @endif
-
                                     @endif
 
                                     <br>
@@ -303,16 +328,16 @@
                                     <br>
                                     <hr>
                                 @endforeach
-
-                            @else {{-- If the authenticated/logged-in user is 'vendor', restrict the "Update Order Status" feature --}}
-                                This feature is restricted.
+                                @else
+                                    {{-- If the authenticated/logged-in user is 'vendor', restrict the "Update Order Status" feature --}}
+                                    This feature is restricted.
                             @endif
 
                         </div>
                     </div>
                 </div>
 
-                
+
                 <div class="col-md-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
@@ -323,25 +348,27 @@
                                 <table class="table table-striped table-borderless">
                                     <tr class="table-danger">
                                         <th>Product Image</th>
+                                        <th>Breeder ID</th>
                                         <th>Code</th>
                                         <th>Name</th>
-                                        <th>Size</th>
-                                        <th>Color</th>
-                                        <th>Unit Price</th> 
+                                        <th>Chicken Type</th>
+                                        <th>Unit Price</th>
                                         <th>Product Qty</th>
-                                        <th>Total Price</th> 
+                                        <th>Total Price</th>
 
-                                        
-                                        @if (\Illuminate\Support\Facades\Auth::guard('admin')->user()->type != 'vendor') {{-- If the authenticated/logged-in user is an 'admin', 'superadmin' or 'subadmin', NOT 'vendor' --}} {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
+
+                                        @if (\Illuminate\Support\Facades\Auth::guard('admin')->user()->type != 'vendor')
+                                            {{-- If the authenticated/logged-in user is an 'admin', 'superadmin' or 'subadmin', NOT 'vendor' --}} {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
                                             <th>Product by</th>
                                         @endif
 
-                                        
-                                        
+
+
                                         <th>Commission</th> {{-- Vendor's Commission percentage must be paid on every product sold to the Website Owner --}}
                                         <th>Final Amount</th> {{-- Vendor's profit after paying (deducting) the Commission percentage --}}
 
-                                        <th>Item Status</th> {{-- can be updated by both 'vendor'-s and 'admin'-s. This is in contrast to 'Update Order Status' which can be updated by 'admin'-s ONLY --}} 
+                                        <th>Item Status</th> {{-- can be updated by both 'vendor'-s and 'admin'-s. This is in contrast to 'Update Order Status' which can be updated by 'admin'-s ONLY --}}
+
                                         {{-- Note: The `order_statuses` table contains all kinds of order statuses (that can be updated by 'admin'-s ONLY in `orders` table) like: pending, in progress, shipped, canceled, ...etc. In `order_statuses` table, the `name` column can be: 'New', 'Pending', 'Canceled', 'In Progress', 'Shipped', 'Partially Shipped', 'Delivered', 'Partially Delivered' and 'Paid'. 'Partially Shipped': If one order has products from different vendors, and one vendor has shipped their product to the customer while other vendor (or vendors) didn't!. 'Partially Delivered': if one order has products from different vendors, and one vendor has shipped and DELIVERED their product to the customer while other vendor (or vendors) didn't!    // The `order_item_statuses` table contains all kinds of order statuses (that can be updated by both 'vendor'-s and 'admin'-s in `orders_products` table) like: pending, in progress, shipped, canceled, ...etc. --}}
                                     </tr>
 
@@ -349,95 +376,286 @@
                                         <tr>
                                             <td>
                                                 @php
-                                                    $getProductImage = \App\Models\Product::getProductImage($product['product_id']);
+                                                    $getProductImage = \App\Models\Product::getProductImage(
+                                                        $product['product_id'],
+                                                    );
                                                 @endphp
 
                                                 <a target="_blank" href="{{ url('product/' . $product['product_id']) }}">
-                                                    <img src="{{ asset('front/images/product_images/small/' . $getProductImage) }}">
+                                                    <img
+                                                        src="{{ asset('front/images/product_images/small/' . $getProductImage) }}">
                                                 </a>
                                             </td>
+                                            <td>{{ $product['vendor_id'] }}</td>
                                             <td>{{ $product['product_code'] }}</td>
                                             <td>{{ $product['product_name'] }}</td>
                                             <td>{{ $product['product_size'] }}</td>
-                                            <td>{{ $product['product_color'] }}</td>
-                                            <td>{{ $product['product_price'] }}</td> 
+                                            <td>{{ $product['product_price'] }}</td>
                                             <td>{{ $product['product_qty'] }}</td>
                                             <td>
-                                                
-                                                @if ($product['vendor_id'] > 0) {{-- if the product belongs to a 'vendor', not 'admin' --}}
 
-                                                    
-                                                    @if ($orderDetails['coupon_amount'] > 0) {{-- If there's a Coupon Code used --}}
+                                                @if ($product['vendor_id'] > 0)
+                                                    {{-- if the product belongs to a 'vendor', not 'admin' --}}
 
-                                                        @if (\App\Models\Coupon::couponDetails($orderDetails['coupon_code'])['vendor_id'] > 0) {{-- if a Coupon Code has been used, and this Coupon Code belongs to a 'vendor', not 'admin' (Because in `coupons` table, if the `vendor_id` column is 1 one, this means that the Coupon Code is added by a 'vendor', not 'admin', and if the `vendor_id` column is 0 zero, this means that the Coupon Code is added by an 'admin', not 'vendor') --}}
+
+                                                    @if ($orderDetails['coupon_amount'] > 0)
+                                                        {{-- If there's a Coupon Code used --}}
+
+                                                        @if (\App\Models\Coupon::couponDetails($orderDetails['coupon_code'])['vendor_id'] > 0)
+                                                            {{-- if a Coupon Code has been used, and this Coupon Code belongs to a 'vendor', not 'admin' (Because in `coupons` table, if the `vendor_id` column is 1 one, this means that the Coupon Code is added by a 'vendor', not 'admin', and if the `vendor_id` column is 0 zero, this means that the Coupon Code is added by an 'admin', not 'vendor') --}}
                                                             @php
-                                                                // dd(\App\Models\Coupon::couponDetails($orderDetails['coupon_code'])['vendor_id']);    
+                                                                // dd(\App\Models\Coupon::couponDetails($orderDetails['coupon_code'])['vendor_id']);
                                                             @endphp
-                                                            
-                                                        {{ $total_price = ($product['product_price'] * $product['product_qty']) - $item_discount }}
-                                                        @else {{-- if a Coupon Code has been used, and this Coupon Code belongs to an 'admin', not 'vendor' (Because in `coupons` table, if the `vendor_id` column is 1 one, this means that the Coupon Code is added by a 'vendor', not 'admin', and if the `vendor_id` column is 0 zero, this means that the Coupon Code is added by an 'admin', not 'vendor') --}}
+
+                                                            {{ $total_price = $product['product_price'] * $product['product_qty'] - $item_discount }}
+                                                        @else
+                                                            {{-- if a Coupon Code has been used, and this Coupon Code belongs to an 'admin', not 'vendor' (Because in `coupons` table, if the `vendor_id` column is 1 one, this means that the Coupon Code is added by a 'vendor', not 'admin', and if the `vendor_id` column is 0 zero, this means that the Coupon Code is added by an 'admin', not 'vendor') --}}
                                                             {{ $total_price = $product['product_price'] * $product['product_qty'] }}
                                                         @endif
-                                                    
-                                                    @else {{-- If there isn't a Coupon Code used --}}
+                                                    @else
+                                                        {{-- If there isn't a Coupon Code used --}}
                                                         {{ $total_price = $product['product_price'] * $product['product_qty'] }}
                                                     @endif
-
-                                                @else {{-- if the product belongs to an 'admin', not 'vendor' --}}
+                                                @else
+                                                    {{-- if the product belongs to an 'admin', not 'vendor' --}}
                                                     {{ $total_price = $product['product_price'] * $product['product_qty'] }}
                                                 @endif
-                                            </td> {{-- Total Price = Unit Price * Quantity --}} 
+                                            </td> {{-- Total Price = Unit Price * Quantity --}}
 
-                                            
-                                            @if (\Illuminate\Support\Facades\Auth::guard('admin')->user()->type != 'vendor') {{-- If the authenticated/logged-in user is an 'admin', 'superadmin' or 'subadmin', NOT 'vendor' --}} {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
-                                                @if ($product['vendor_id'] > 0) {{-- if the product belongs to a 'vendor' --}}
+
+                                            @if (\Illuminate\Support\Facades\Auth::guard('admin')->user()->type != 'vendor')
+                                                {{-- If the authenticated/logged-in user is an 'admin', 'superadmin' or 'subadmin', NOT 'vendor' --}} {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
+                                                @if ($product['vendor_id'] > 0)
+                                                    {{-- if the product belongs to a 'vendor' --}}
                                                     <td>
-                                                        <a href="/admin/view-vendor-details/{{ $product['admin_id'] }}" target="_blank">Vendor</a>
+                                                        <a href="/admin/view-vendor-details/{{ $product['admin_id'] }}"
+                                                            target="_blank">Vendor</a>
                                                     </td>
                                                 @else
                                                     <td>Admin</td>
                                                 @endif
                                             @endif
 
-                                            
-                                            
-                                            @if ($product['vendor_id'] > 0) {{-- if the product belongs to a 'vendor' --}}
-                                                <td>{{ $commission = round($total_price * $product['commission'] / 100, 2) }}</td> 
+
+
+                                            @if ($product['vendor_id'] > 0)
+                                                {{-- if the product belongs to a 'vendor' --}}
+                                                <td>{{ $commission = round(($total_price * $product['commission']) / 100, 2) }}
+                                                </td>
                                                 <td>{{ $total_price - $commission }}</td>
                                             @else
                                                 <td>0</td>
                                                 <td>{{ $total_price }}</td>
                                             @endif
 
-                                            
+
                                             <td>
-                                                
+
                                                 {{-- Note: The `order_statuses` table contains all kinds of order statuses (that can be updated by 'admin'-s ONLY in `orders` table) like: pending, in progress, shipped, canceled, ...etc. In `order_statuses` table, the `name` column can be: 'New', 'Pending', 'Canceled', 'In Progress', 'Shipped', 'Partially Shipped', 'Delivered', 'Partially Delivered' and 'Paid'. 'Partially Shipped': If one order has products from different vendors, and one vendor has shipped their product to the customer while other vendor (or vendors) didn't!. 'Partially Delivered': if one order has products from different vendors, and one vendor has shipped and DELIVERED their product to the customer while other vendor (or vendors) didn't!    // The `order_item_statuses` table contains all kinds of order statuses (that can be updated by both 'vendor'-s and 'admin'-s in `orders_products` table) like: pending, in progress, shipped, canceled, ...etc. --}}
-                                                <form action="{{ url('admin/update-order-item-status') }}" method="post">  {{-- can be updated by both 'vendor'-s and 'admin'-s. This is in contrast to 'Update Order Status' which can be updated by 'admin'-s ONLY --}}
+                                                <form action="{{ url('admin/update-order-item-status') }}"
+                                                    method="post"> {{-- can be updated by both 'vendor'-s and 'admin'-s. This is in contrast to 'Update Order Status' which can be updated by 'admin'-s ONLY --}}
                                                     @csrf {{-- Preventing CSRF Requests: https://laravel.com/docs/9.x/csrf#preventing-csrf-requests --}}
 
-                                                    <input type="hidden" name="order_item_id" value="{{ $product['id'] }}">
+                                                    <input type="hidden" name="order_item_id"
+                                                        value="{{ $product['id'] }}">
 
                                                     <select id="order_item_status" name="order_item_status" required>
                                                         <option value="">Select</option>
                                                         @foreach ($orderItemStatuses as $status)
-                                                            <option value="{{ $status['name'] }}"  @if (!empty($product['item_status']) && $product['item_status'] == $status['name']) selected @endif>{{ $status['name'] }}</option>
+                                                            <option value="{{ $status['name'] }}"
+                                                                @if (!empty($product['item_status']) && $product['item_status'] == $status['name']) selected @endif>
+                                                                {{ $status['name'] }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
 
                                                     {{-- // Note: There are two types of Shipping Process: "manual" and "automatic". "Manual" is in the case like small businesses, where the courier arrives at the owner warehouse to to pick up the order for shipping, and the small business owner takes the shipment details (like courier name, tracking number, ...) from the courier, and inserts those details themselves in the Admin Panel when they "Update Order Status" Section (by an 'admin') or "Update Item Status" Section (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php). With "automatic" shipping process, we're integrating third-party APIs and orders go directly to the shipping partner, and the updates comes from the courier's end, and orders are automatically delivered to customers --}}
-                                                    <input style="width: 110px" type="text" name="item_courier_name"    id="item_courier_name"    placeholder="Item Courier Name"    @if (!empty($product['courier_name']))    value="{{ $product['courier_name'] }}"    @endif> {{-- This input field will only show up when 'Shipped' <option> is selected. Check admin/js/custom.js --}}
-                                                    <input style="width: 110px" type="text" name="item_tracking_number" id="item_tracking_number" placeholder="Item Tracking Number" @if (!empty($product['tracking_number'])) value="{{ $product['tracking_number'] }}" @endif> {{-- This input field will only show up when 'Shipped' <option> is selected. Check admin/js/custom.js --}}
 
-                                                    <button type="submit">Update</button>
+                                                    <!-- <input style="width: 110px" type="text" name="item_courier_name" id="item_courier_name" placeholder="Item Courier Name"
+                                                            @if (!empty($product['courier_name'])) value="{{ $product['courier_name'] }}" @endif
+                                                            @if (Auth::check() && Auth::user()->type !== 'vendor') readonly @endif>
+
+                                                        <label for="tracking_number">Tracking Number:</label>
+                                                        <input type="text" name="tracking_number" id="tracking_number"
+                                                            value="{{ 'TN-' . strtoupper(uniqid()) }}"
+                                                            @if (Auth::check() && Auth::user()->type !== 'vendor') readonly @endif> -->
+
+
+
+                                                    {{-- New input for Delivery Schedule --}}
+                                                    <button type="submit">
+                                                        Update
+                                                    </button>
+
+
                                                 </form>
                                             </td>
-                                        </tr>         
+
+                                        </tr>
                                     @endforeach
                                 </table>
                             </div>
+
+
+                            <br>
+                            {{-- Route Map Container --}}
+                            <h4 class="card-title">Route Map</h4>
+                            @if (Auth::guard('admin')->user()->type != 'vendor')
+                                <div id="map" style="height: 300px; width: 100%;"></div>
+
+                                <!-- Google Maps JavaScript API with your API Key -->
+                                <script async defer
+                                    src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.javascript_api_key') }}&callback=initMap">
+                                </script>
+
+                                <script>
+                                    let map;
+                                    let directionsService;
+                                    let directionsRenderer;
+
+                                    // Coordinates array for the route (first point is a placeholder for the live location)
+                                    const coordinates = [];
+
+                                    // Fetch live location and vendor coordinates
+                                    function initMap() {
+                                        // Initialize directions services
+                                        directionsService = new google.maps.DirectionsService();
+                                        directionsRenderer = new google.maps.DirectionsRenderer();
+
+                                        // Get user's live location
+                                        if (navigator.geolocation) {
+                                            navigator.geolocation.getCurrentPosition(
+                                                position => {
+                                                    // Add user's live location as the first point
+                                                    coordinates.push({
+                                                        lat: position.coords.latitude,
+                                                        lng: position.coords.longitude,
+                                                    });
+
+                                                    // Add vendor coordinates from PHP
+                                                    @foreach ($orderDetails['orders_products'] as $product)
+                                                        @foreach ($vendors as $vendor)
+                                                            @if (isset($vendor['vendor_business']['vendor_id']) && $product['vendor_id'] === $vendor['vendor_business']['vendor_id'])
+                                                                // Adding vendor's coordinates to the array
+                                                                coordinates.push({
+                                                                    lat: parseFloat("{{ $vendor['vendor_business']['shop_pincode'] }}"),
+                                                                    lng: parseFloat("{{ $vendor['vendor_business']['shop_state'] }}"),
+                                                                });
+                                                            @endif
+                                                        @endforeach
+                                                    @endforeach
+
+                                                    // Add recipient's location as the final point
+                                                    coordinates.push({
+                                                        lat: parseFloat("{{ $orderDetails['state'] }}"), // Recipient latitude
+                                                        lng: parseFloat("{{ $orderDetails['city'] }}"), // Recipient longitude
+                                                    });
+
+                                                    // Log coordinates array with labels (for debugging)
+                                                    coordinates.forEach((coord, index) => {
+                                                        console.log(`${String.fromCharCode(65 + index)}: ${coord.lat}, ${coord.lng}`);
+                                                    });
+
+                                                    // Initialize map centered on user's live location
+                                                    map = new google.maps.Map(document.getElementById("map"), {
+                                                        center: coordinates[0],
+                                                        zoom: 12,
+                                                    });
+
+                                                    directionsRenderer.setMap(map);
+
+                                                    calculateAndDisplayRoute();
+                                                },
+                                                () => {
+                                                    alert("Failed to retrieve live location. Please enable location access.");
+                                                    initMapWithFallback();
+                                                }
+                                            );
+                                        } else {
+                                            alert("Geolocation is not supported by this browser.");
+                                            initMapWithFallback();
+                                        }
+                                    }
+
+                                    // Fallback to initialize map without live location
+                                    function initMapWithFallback() {
+                                        map = new google.maps.Map(document.getElementById("map"), {
+                                            center: {
+                                                lat: 0,
+                                                lng: 0
+                                            }, // Default fallback location
+                                            zoom: 5,
+                                        });
+
+                                        directionsRenderer.setMap(map);
+
+                                        calculateAndDisplayRoute();
+                                    }
+
+                                    // Calculate and display the route on the map
+                                    function calculateAndDisplayRoute() {
+                                        console.log("Coordinates before route calculation:", coordinates);
+
+                                        if (coordinates.length < 2) {
+                                            alert("Not enough points to create a route.");
+                                            return;
+                                        }
+
+                                        // The first coordinate is the user's live location (origin)
+                                        const waypoints = coordinates.slice(1, -1).map(coord => ({
+                                            location: coord,
+                                            stopover: true,
+                                        }));
+
+                                        directionsService.route({
+                                            origin: coordinates[0], // User's live location
+                                            destination: coordinates[coordinates.length - 1], // Recipient's location
+                                            waypoints: waypoints, // Intermediate vendor locations
+                                            travelMode: google.maps.TravelMode.DRIVING,
+                                        }, (response, status) => {
+                                            if (status === google.maps.DirectionsStatus.OK) {
+                                                directionsRenderer.setDirections(response);
+
+                                                // Calculate total distance
+                                                let totalDistance = 0;
+                                                const route = response.routes[0];
+
+                                                // Sum up the distances from all legs of the route
+                                                route.legs.forEach(leg => {
+                                                    totalDistance += leg.distance.value; // Distance in meters
+                                                });
+
+                                                // Convert to kilometers
+                                                totalDistance = totalDistance / 1000;
+
+                                                // Display the total distance
+                                                const distanceElement = document.getElementById("route-distance");
+                                                if (distanceElement) {
+                                                    distanceElement.innerText = ``;
+                                                } else {
+                                                    alert(``);
+                                                }
+
+                                                console.log(``);
+                                            } else {
+                                                console.error("Directions request failed due to " + status);
+                                                alert("Failed to load route: " + status);
+                                            }
+                                        });
+                                    }
+                                </script>
+                                <div id="route-distance" style="margin-top: 10px; font-size: 16px; font-weight: bold;">
+                                    <!-- The calculated distance will appear here -->
+                                </div>
+                            @else
+                                This feature is only for delivery personnel.
+                            @endif
+
+
                         </div>
+
                     </div>
+
                 </div>
 
             </div>

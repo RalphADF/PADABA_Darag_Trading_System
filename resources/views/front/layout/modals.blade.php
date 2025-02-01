@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
                                 <div class="sizes u-s-m-b-11">
-                                    <span>Available Size:</span>
+                                    <span>Available Weight (kg):</span>
                                     <div class="size-variant select-box-wrapper">
                                         <select class="select-box product-size">
                                             <option value="">Male 2XL</option>

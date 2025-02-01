@@ -1,7 +1,7 @@
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
-        <!-- Outer-Footer -->
+        <!-- Outer-Footer 
         <div class="outer-footer-wrapper u-s-p-y-80">
             <h6>
                 For special offers and other discount information
@@ -21,14 +21,14 @@
                 <input type="text" placeholder="Your Email Address" id="subscriber_email" name="subscriber_email" required> {{-- We'll use the HTML id Global Attribute in jQuery in front/js/custom.js --}} 
                 <button type="button" class="button" onclick="addSubscriber()">SUBMIT</button> {{-- Check the addSubscriber() function in front/js/custom.js. We'll use it in conjunction with the    id="subscriber_email"    of the <input> field --}}
             </form>
-
+        -->
 
 
         </div>
         <!-- Outer-Footer /- -->
         <!-- Mid-Footer -->
         <div class="mid-footer-wrapper u-s-p-b-80">
-            <div class="row">
+        <div class="row justify-content-center">
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="footer-list">
                         <h6>COMPANY</h6>
@@ -39,12 +39,11 @@
                             <li>
                                 <a href="{{ url('contact') }}">Contact Us</a>
                             </li>
-                            <li>
-                                <a href="{{ url('faq') }}">FAQ</a>
-                            </li>
+                            
                         </ul>
                     </div>
                 </div>
+                 <!-- Mid-Footer 
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="footer-list">
                         <h6>COLLECTION</h6>
@@ -61,6 +60,7 @@
                         </ul>
                     </div>
                 </div>
+                -->
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="footer-list">
                         <h6>ACCOUNT</h6>
@@ -76,23 +76,25 @@
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="footer-list">
-                        <h6>Contact</h6>
+                        <h6>CONTACT</h6>
                         <ul>
                             <li>
                                 <i class="fas fa-location-arrow u-s-m-r-9"></i>
-                                <span>Multi-vendor E-commerce Application</span>
+                                <span>PADABA</span>
                             </li>
                             <li>
                                 <a href="tel:+201255845857">
                                 <i class="fas fa-phone u-s-m-r-9"></i>
-                                <span>+01255845857</span>
+                                <span>Smart: 09617880022</span> <br>
+                                <i class="fas fa-phone u-s-m-r-9"></i>
+                                <span>Globe: 09164632232</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="mailto:info@multi-vendore-commerce.com">
+                                <a href="mailto:padabathesis@gmail.com">
                                 <i class="fas fa-envelope u-s-m-r-9"></i>
                                 <span>
-                                info@multi-vendore-commerce.com</span>
+                                padaba@gmail.com</span>
                                 </a>
                             </li>
                         </ul>
@@ -101,7 +103,7 @@
             </div>
         </div>
         <!-- Mid-Footer /- -->
-        <!-- Bottom-Footer -->
+        <!-- Bottom-Footer 
         <div class="bottom-footer-wrapper">
             <div class="social-media-wrapper">
                 <ul class="social-media-list">
@@ -147,6 +149,9 @@
             </p>
         </div>
     </div>
-    <!-- Bottom-Footer /- -->
+   Bottom-Footer /- -->
+
+
 </footer>
 <!-- Footer /- -->
+

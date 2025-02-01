@@ -19,7 +19,9 @@ h1, h2, h3, h4, h5, h6 {
  * Basic styles for links
  */
 a {
-  color: #292929; }
+  color: #292929;
+font-family: 'Poppins', sans-serif;
+}
   a:hover {
     color: #00A6ED;
     text-decoration: none; }
@@ -48,7 +50,7 @@ img {
  */
 body {
   color: #707070;
-  font-family: "Open Sans", sans-serif; }
+  font-family: 'Poppins', sans-serif; }
 
 /*--------------------------------------------------------------
 3.0 Pre-configured styles
@@ -818,7 +820,7 @@ body {
 
 .button-outline-secondary {
   background-color: transparent;
-  font-weight: 700;
+  font-weight: bold;
   border-radius: 4px;
   color: #292929;
   border: 2px solid #292929; }
@@ -2216,7 +2218,7 @@ body {
   height: 175px; }
 
 .information-about-wrapper p {
-  font-size: 13px;
+  font-size: 15px;
   margin-bottom: 30px; }
 
 .contact-material h6 {
@@ -2361,6 +2363,7 @@ body {
 /* 16.2 Product-details */
 .section-1-title-breadcrumb-rating .product-title h1 {
   font-size: 26px;
+  font-family: 'Poppins', sans-serif;
   margin-bottom: 0; }
   .section-1-title-breadcrumb-rating .product-title h1 a:hover {
     color: #292929; }
@@ -2375,6 +2378,7 @@ body {
 
 .information-heading {
   color: #292929;
+  font-family: 'Poppins', sans-serif;
   font-size: 14px; }
 
 .section-2-short-description {
@@ -2401,7 +2405,7 @@ body {
     font-size: 13px; }
   .section-4-sku-information > .availability span + span {
     margin-left: 2px;
-    color: #28a745; }
+    color: #c1121f; }
   .section-4-sku-information .left span + span {
     margin-left: 2px; }
 

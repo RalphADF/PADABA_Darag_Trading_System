@@ -110,26 +110,26 @@
                     <div class="information-about-wrapper">
                         <h1 class="contact-h1">Information About Us</h1>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, tempora, voluptate. Architecto aspernatur, culpa cupiditate deserunt dolore eos facere in, incidunt omnis quae quam quos, similique sunt tempore vel vero.
-                        </p>
+                        Panay Darag Chicken Breeders Association Inc. (PADABA) was founded last March 2017 with the Help of the West Visayas State University - Research and Development. Duly registered to Security and Exchange Commission last April 27, 2017 with Registration Number CN 201713972 and also registered to Bureau of Internal Revenue.</p>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, tempora, voluptate. Architecto aspernatur, culpa cupiditate deserunt dolore eos facere in, incidunt omnis quae quam quos, similique sunt tempore vel vero.
+                        PADABA Focuses solely in the propagation and preservation of the Darag Native Chicken.
                         </p>
                     </div>
                     <div class="contact-us-wrapper">
                         <h1 class="contact-h1">Contact Us</h1>
                         <div class="contact-material u-s-m-b-16">
                             <h6>Location</h6>
-                            <span>10 Salah Salem St.</span>
-                            <span>Cairo, Egypt</span>
+                            <span>Iloilo City</span>
+                            <span>La Paz, Iloilo</span>
                         </div>
                         <div class="contact-material u-s-m-b-16">
                             <h6>Email</h6>
-                            <span>developers@computerscience.com</span>
+                            <span>padaba@gmail.com</span>
                         </div>
                         <div class="contact-material u-s-m-b-16">
-                            <h6>Telephone</h6>
-                            <span>+201122237359</span>
+                            <h6>Contact Numbers</h6>
+                            <span>Smart: 09617880022</span>
+                            <span>Globe: 09164632232</span>
                         </div>
                     </div>
                 </div>

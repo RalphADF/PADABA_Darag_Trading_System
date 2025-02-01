@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Admin;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrdersProduct;
 use App\Models\OrdersLog;
 use App\Models\OrderStatus;
 use App\Models\OrderItemStatus;
-
+use App\Models\Vendor;
+use App\Models\VendorsBusinessDetail;
+use App\Models\VendorsBankDetail;
 
 class OrderController extends Controller
 {
@@ -25,39 +28,49 @@ class OrderController extends Controller
     public function orders() {
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'orders');
-
-
+    
         // We determine the authenticated/logged-in user. If the authenticated/logged-in user is 'vendor', we show ONLY the orders of the products added by that specific 'vendor' ONLY, but if the authenticated/logged-in user is 'admin', we show ALL orders    
-        $adminType = Auth::guard('admin')->user()->type;      // `type`      is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `type`      column in `admins` table    
-        $vendor_id = Auth::guard('admin')->user()->vendor_id; // `vendor_id` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `vendor_id` column in `admins` table    
-
-
-        if ($adminType == 'vendor') { // if the authenticated user (the logged in user) is 'vendor', check his `status`
-            $vendorStatus = Auth::guard('admin')->user()->status; // `status` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `status` column in `admins` table    
-
+        $adminType = Auth::guard('admin')->user()->type;      // type is the column in admins table    
+        $vendor_id = Auth::guard('admin')->user()->vendor_id; // vendor_id is the column in admins table    
+    
+        if ($adminType == 'vendor') { // if the authenticated user (the logged in user) is 'vendor', check his status
+            $vendorStatus = Auth::guard('admin')->user()->status; // status is the column in admins table    
+    
             if ($vendorStatus == 0) { // if the 'vendor' is inactive/disabled
-                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your Vendor Account is not approved yet. Please make sure to fill your valid personal, business and bank details.'); // the error_message will appear to the vendor in the route: 'admin/update-vendor-details/personal' which is the update_vendor_details.blade.php page
+                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your Breeder Account is not approved yet. Please make sure to fill your valid personal, business and bank details.'); 
             }
         }
-
-
-        if ($adminType == 'vendor') { // If the authenticated/logged-in user is 'vendor', we show ONLY the orders of the products added by that specific 'vendor' ONLY
-            $orders = Order::with([ // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model    // Constraining Eager Loads: https://laravel.com/docs/9.x/eloquent-relationships#constraining-eager-loads    // Subquery Where Clauses: https://laravel.com/docs/9.x/queries#subquery-where-clauses    // Advanced Subqueries: https://laravel.com/docs/9.x/eloquent#advanced-subqueries
-                'orders_products' => function($query) use ($vendor_id) { // function () use ()     syntax: https://www.php.net/manual/en/functions.anonymous.php#:~:text=the%20use%20language%20construct     // 'orders_products' is the Relationship method name in Order.php model
-                    $query->where('vendor_id', $vendor_id); // `vendor_id` in `orders_products` table
+    
+        // If the authenticated/logged-in user is 'vendor', we show ONLY the orders of the products added by that specific 'vendor' ONLY
+        if ($adminType == 'vendor') {
+            $orders = Order::with([
+                'orders_products' => function($query) use ($vendor_id) {
+                    $query->where('vendor_id', $vendor_id); // vendor_id in orders_products table
                 }
             ])->orderBy('id', 'Desc')->get()->toArray();
-            // dd($orders);
-
-        } else { // if the authenticated/logged-in user is 'admin', we show ALL orders
-            $orders = Order::with('orders_products')->orderBy('id', 'Desc')->get()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model
-            // dd($orders);
+        
+            $orderCount = Order::whereHas('orders_products', function($query) use ($vendor_id) {
+                $query->where('vendor_id', $vendor_id);
+            })->count(); // Count the number of orders for the specific vendor
+        
+            // Calculate the total sum of orders where order_status is 'Delivered & Paid'
+            $totalDeliveredAndPaid = Order::where('order_status', 'Delivered & Paid')
+                ->whereHas('orders_products', function($query) use ($vendor_id) {
+                    $query->where('vendor_id', $vendor_id);
+                })
+                ->sum('grand_total'); // Sum up the grand_total for these orders
         }
-
-
-        return view('admin.orders.orders')->with(compact('orders'));
+         else { // if the authenticated/logged-in user is 'admin', we show ALL orders
+            $orders = Order::with('orders_products')->orderBy('id', 'Desc')->get()->toArray();
+            $orderCount = Order::count(); // Count the total number of orders for admin
+            $totalDeliveredAndPaid = Order::where('order_status', 'Delivered & Paid')->sum('grand_total');
+        }
+    
+        return view('admin.orders.orders')->with(compact('orders', 'orderCount', 'totalDeliveredAndPaid'));
     }
+    
 
+    
     // Render admin/orders/order_details.blade.php (View Order Details page) when clicking on the View Order Details icon in admin/orders/orders.blade.php (Orders tab under Orders Management section in Admin Panel)    
     public function orderDetails($id) {
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
@@ -67,12 +80,17 @@ class OrderController extends Controller
         // We determine the authenticated/logged-in user. If the authenticated/logged-in user is 'vendor', we show ONLY the details (the `orders_products` table) of the orders of the products added by that specific 'vendor' ONLY (in admin/orders/order_details.blade.php page), but if the authenticated/logged-in user is 'admin', we show ALL orders details (in admin/orders/order_details.blade.php page)    
         $adminType = Auth::guard('admin')->user()->type;      // `type`      is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `type`      column in `admins` table    
         $vendor_id = Auth::guard('admin')->user()->vendor_id; // `vendor_id` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `vendor_id` column in `admins` table    
-        
+            $vendors = Admin::with('vendorBusiness')->get(); // Eager load 'vendorBusiness' relationship
+         $vendors = json_decode(json_encode($vendors), true); // Convert to array if needed for easier handling
+        //dd($vendorDetails);
+    
+
+            
         if ($adminType == 'vendor') { // if the authenticated user (the logged in user) is 'vendor', check his `status`
             $vendorStatus = Auth::guard('admin')->user()->status; // `status` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `status` column in `admins` table    
 
             if ($vendorStatus == 0) { // if the 'vendor' is inactive/disabled
-                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your Vendor Account is not approved yet. Please make sure to fill your valid personal, business and bank details.'); // the error_message will appear to the vendor in the route: 'admin/update-vendor-details/personal' which is the update_vendor_details.blade.php page
+                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your Breeder Account is not approved yet. Please make sure to fill your valid personal, business and bank details.'); // the error_message will appear to the vendor in the route: 'admin/update-vendor-details/personal' which is the update_vendor_details.blade.php page
             }
         }
 
@@ -128,19 +146,21 @@ class OrderController extends Controller
         }
 
 
-        return view('admin.orders.order_details')->with(compact('orderDetails', 'userDetails', 'orderStatuses', 'orderItemStatuses', 'orderLog', 'item_discount'));
+        return view('admin.orders.order_details')->with(compact('vendors', 'orderDetails', 'userDetails', 'orderStatuses', 'orderItemStatuses', 'orderLog', 'item_discount'));
+        
     }
 
     // Update Order Status (by 'admin'-s ONLY, not 'vendor'-s, in contrast to "Update Item Status" which can be updated by both 'vendor'-s and 'admin'-s) (Pending, Shipped, In Progress, Canceled, ...) in admin/orders/order_details.blade.php in Admin Panel    
     // Note: The `order_statuses` table contains all kinds of order statuses (that can be updated by 'admin'-s ONLY in `orders` table) like: pending, in progress, shipped, canceled, ...etc. In `order_statuses` table, the `name` column can be: 'New', 'Pending', 'Canceled', 'In Progress', 'Shipped', 'Partially Shipped', 'Delivered', 'Partially Delivered' and 'Paid'. 'Partially Shipped': If one order has products from different vendors, and one vendor has shipped their product to the customer while other vendor (or vendors) didn't!. 'Partially Delivered': if one order has products from different vendors, and one vendor has shipped and DELIVERED their product to the customer while other vendor (or vendors) didn't!    // The `order_item_statuses` table contains all kinds of order statuses (that can be updated by both 'vendor'-s and 'admin'-s in `orders_products` table) like: pending, in progress, shipped, canceled, ...etc.
     public function updateOrderStatus(Request $request) {
+        
         if ($request->isMethod('post')) {
             $data = $request->all();
-            // dd($data);
-
+            //dd($data);
+            
             // Note: There are two types of Shipping Process: "manual" and "automatic". "Manual" is in the case like small businesses, where the courier arrives at the owner warehouse to to pick up the order for shipping, and the small business owner takes the shipment details (like courier name, tracking number, ...) from the courier, and inserts those details themselves in the Admin Panel when they "Update Order Status" Section (by an 'admin') or "Update Item Status" Section (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php). With "automatic" shipping process, we're integrating third-party APIs (e.g. Shiprocket API) and orders go directly to the shipping partner, and the updates comes from the courier's end, and orders are automatically delivered to customers
             // "Automatic" Shipping Process (when 'admin' does NOT enter the Courier Name and Tracking Number): Configure the Shiprocket API in our Admin Panel in admin/orders/order_details.blade.php (to automate Pushing Orders to Shiprocket API by selecting "Shipped" from the drop-down menu)    
-            if (empty($data['courier_name']) && empty($data['tracking_number']) && $data['order_status'] == 'Shipped') { // if the 'admin' didn't enter the Courier Name and Tracking Nubmer when they selected "Shipped" from the drop-down menu in admin/orders/order_details.blade.php, use the "Automatic" Shipping Process (Push Orders to Shiprocket API), not the "Manual" Shipping process. Check the "Manual" Shipping process in the next if statement
+            if (empty($data['courier_name']) && empty($data['tracking_number']) && empty($data['delivery_schedule']) && $data['order_status'] == 'Shipped') { // if the 'admin' didn't enter the Courier Name and Tracking Nubmer when they selected "Shipped" from the drop-down menu in admin/orders/order_details.blade.php, use the "Automatic" Shipping Process (Push Orders to Shiprocket API), not the "Manual" Shipping process. Check the "Manual" Shipping process in the next if statement
                 // dd('Inside Automatic Shipping Process if statement in updateOrderStatus() method in Admin/OrderController.php<br>');
                 // echo 'Inside Automatic Shipping Process if statement in updateOrderStatus() method in Admin/OrderController.php<br>';
                 // exit;
@@ -162,12 +182,14 @@ class OrderController extends Controller
 
             // Note: There are two types of Shipping Process: "manual" and "automatic". "Manual" is in the case like small businesses, where the courier arrives at the owner warehouse to to pick up the order for shipping, and the small business owner takes the shipment details (like courier name, tracking number, ...) from the courier, and inserts those details themselves in the Admin Panel when they "Update Order Status" Section (by an 'admin') or "Update Item Status" Section (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php). With "automatic" shipping process, we're integrating third-party APIs (e.g. Shiprocket API) and orders go directly to the shipping partner, and the updates comes from the courier's end, and orders are automatically delivered to customers
             // First: "Manual" Shipping Process (when 'admin' enters the Courier Name and Tracking Number. Check the last if statement for the "Automatic" Shipping Process) (Business owner takes the order shipment information from the courier and inserts them themselves when they "Update Order Status" (by an 'admin') (in admin/orders/order_details.blade.php)) i.e. Updating `courier_name` and `tracking_number` columns in `orders` table
-            if (!empty($data['courier_name']) && !empty($data['tracking_number'])) { // if an 'admin' Updates the Order Status to 'Shipped' in admin/orders/order_details.blade.php, and submits both Courier Name and Tracking Number HTML input fields
+            if (!empty($data['courier_name']) || !empty($data['delivery_schedule'])) {
                 Order::where('id', $data['order_id'])->update([
-                    'courier_name'    => $data['courier_name'],
-                    'tracking_number' => $data['tracking_number']
+                    'courier_name' => $data['courier_name'] ?? null,
+                    'delivery_schedule' => $data['delivery_schedule'] ?? null,
                 ]);
             }
+            
+            
 
 
             // We'll save the "Update Order Status" History/Logs in `orders_logs` database table (whenever an 'admin' updates an order status)    
@@ -182,22 +204,23 @@ class OrderController extends Controller
             $orderDetails    = Order::with('orders_products')->where('id', $data['order_id'])->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model
 
             
-            if (!empty($data['courier_name']) && !empty($data['tracking_number'])) { // if an 'admin' Updates the Order Status to 'Shipped' in admin/orders/order_details.blade.php, and submits both Courier Name and Tracking Number HTML input fields, include the Courier Name and Tracking Nubmer data in the email (send them with the email)
+            if (!empty($data['courier_name']) && !empty($data['tracking_number']) && !empty($data['delivery_schedule'])) { // if an 'admin' Updates the Order Status to 'Shipped' in admin/orders/order_details.blade.php, and submits both Courier Name and Tracking Number HTML input fields, include the Courier Name and Tracking Nubmer data in the email (send them with the email)
                 $email = $deliveryDetails['email'];
 
                 // The email message data/variables that will be passed in to the email view
                 $messageData = [
-                    'email'           => $email,
-                    'name'            => $deliveryDetails['name'],
-                    'order_id'        => $data['order_id'],
-                    'orderDetails'    => $orderDetails,
-                    'order_status'    => $data['order_status'],
-                    'courier_name'    => $data['courier_name'],
-                    'tracking_number' => $data['tracking_number']
+                    'email'             => $email,
+                    'name'              => $deliveryDetails['name'],
+                    'order_id'          => $data['order_id'],
+                    'orderDetails'      => $orderDetails,
+                    'order_status'      => $data['order_status'],
+                    'courier_name'      => $data['courier_name'],
+                    'tracking_number'   => $data['tracking_number'],
+                    'delivery_schedule' => $data['delivery_schedule']
                 ];
 
                 \Illuminate\Support\Facades\Mail::send('emails.order_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_status' is the order_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Status Updated - MultiVendorEcommerceApplication.com.eg');
+                    $message->to($email)->subject('Order Status Updated - PADABA');
                 });
 
             } else { // if there are no Courier Name and Tracking Number data, don't include them in the email
@@ -213,7 +236,7 @@ class OrderController extends Controller
                 ];
     
                 \Illuminate\Support\Facades\Mail::send('emails.order_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_status' is the order_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Status Updated - MultiVendorEcommerceApplication.com.eg');
+                    $message->to($email)->subject('Order Status Updated - PADABA');
                 });
             }
 
@@ -227,8 +250,13 @@ class OrderController extends Controller
     // Update Item Status (which can be determined by both 'vendor'-s and 'admin'-s, in contrast to "Update Order Status" which is updated by 'admin'-s ONLY, not 'vendor'-s) (Pending, In Progress, Shipped, Delivered, ...) in admin/orders/order_details.blade.php in Admin Panel    
     // Note: The `order_statuses` table contains all kinds of order statuses (that can be updated by 'admin'-s ONLY in `orders` table) like: pending, in progress, shipped, canceled, ...etc. In `order_statuses` table, the `name` column can be: 'New', 'Pending', 'Canceled', 'In Progress', 'Shipped', 'Partially Shipped', 'Delivered', 'Partially Delivered' and 'Paid'. 'Partially Shipped': If one order has products from different vendors, and one vendor has shipped their product to the customer while other vendor (or vendors) didn't!. 'Partially Delivered': if one order has products from different vendors, and one vendor has shipped and DELIVERED their product to the customer while other vendor (or vendors) didn't!    // The `order_item_statuses` table contains all kinds of order statuses (that can be updated by both 'vendor'-s and 'admin'-s in `orders_products` table) like: pending, in progress, shipped, canceled, ...etc.
     public function updateOrderItemStatus(Request $request) {
+        $request->validate([
+            'delivery_schedule' => 'nullable|date|after:today',
+        ]);
+        
         if ($request->isMethod('post')) {
             $data = $request->all();
+            
             // dd($data);
 
             // Update Order Item Status in `orders_products` table
@@ -237,12 +265,13 @@ class OrderController extends Controller
 
             // Note: There are two types of Shipping Process: "manual" and "automatic". "Manual" is in the case like small businesses, where the courier arrives at the owner warehouse to to pick up the order for shipping, and the small business owner takes the shipment details (like courier name, tracking number, ...) from the courier, and inserts those details themselves in the Admin Panel when they "Update Order Status" Section (by an 'admin') or "Update Item Status" Section (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php). With "automatic" shipping process, we're integrating third-party APIs and orders go directly to the shipping partner, and the updates comes from the courier's end, and orders are automatically delivered to customers
             // First: "Manual" Shipping Process (Business owner takes the order shipment information from the courier and inserts them themselves when they "Update Order Item Status" (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php)) i.e. Updating `courier_name` and `tracking_number` columns in `orders_products` table
-            if (!empty($data['item_courier_name']) && !empty($data['item_tracking_number'])) { // if a 'vendor' or 'admin' updates the order Item Status to 'Shipped' in admin/orders/order_details.blade.php, and submits both Courier Name and Tracking Number HTML input fields
-                OrdersProduct::where('id', $data['order_item_id'])->update([
-                    'courier_name'    => $data['item_courier_name'],
-                    'tracking_number' => $data['item_tracking_number']
+            if (!empty($data['courier_name']) && !empty($data['tracking_number']) && !empty($data['delivery_schedule'])) {
+                Order::where('id', $data['order_id'])->update([
+                    'courier_name' => $data['courier_name'],
+                    'tracking_number' => $data['tracking_number'],
+                    'delivery_schedule' => $data['delivery_schedule'], // Ensure this key matches the DB column name
                 ]);
-            }
+            }            
 
 
             // Get the `order_id` column (which is the foreign key to the `id` column in `orders` table) value from `orders_products` table
@@ -283,11 +312,12 @@ class OrderController extends Controller
                     'orderDetails'    => $orderDetails,
                     'order_status'    => $data['order_item_status'],
                     'courier_name'    => $data['item_courier_name'],
-                    'tracking_number' => $data['item_tracking_number']
+                    'tracking_number' => $data['item_tracking_number'],
+                    'delivery_schedule' => $data['delivery_schedule']
                 ];
 
                 \Illuminate\Support\Facades\Mail::send('emails.order_item_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_item_status' is the order_item_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_item_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Item Status Updated - MultiVendorEcommerceApplication.com.eg');
+                    $message->to($email)->subject('Order Item Status Updated - PADABA');
                 });
 
             } else { // if there are no Courier Name and Tracking Number data, don't include them in the email
@@ -303,7 +333,7 @@ class OrderController extends Controller
                 ];
     
                 \Illuminate\Support\Facades\Mail::send('emails.order_item_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_item_status' is the order_item_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_item_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Item Status Updated - MultiVendorEcommerceApplication.com.eg');
+                    $message->to($email)->subject('Order Item Status Updated - PADABA');
                 });
             }
 
@@ -446,7 +476,7 @@ class OrderController extends Controller
                         width: 60px;
                         height: 60px;
                         margin-right: 10px;
-                        background-color: #8BC34A;
+                        background-color: #6c7c5c;
                         border-radius: 50%;
                         text-align: center;
                     }
@@ -459,7 +489,7 @@ class OrderController extends Controller
                         line-height: 1.7em;
                     }
                     header .company-address .title {
-                        color: #8BC34A;
+                        color: #6c7c5c;
                         font-weight: 400;
                         font-size: 1.5em;
                         text-transform: uppercase;
@@ -468,7 +498,7 @@ class OrderController extends Controller
                         float: right;
                         height: 60px;
                         padding: 0 10px;
-                        background-color: #8BC34A;
+                        background-color: #6c7c5c;
                         color: white;
                     }
                     header .company-contact span {
@@ -503,7 +533,7 @@ class OrderController extends Controller
                         line-height: 20px;
                     }
                     section .details .client .name {
-                        color: #8BC34A;
+                        color: #6c7c5c;
                     }
                     section .details .data {
                         width: 50%;
@@ -511,7 +541,7 @@ class OrderController extends Controller
                     }
                     section .details .title {
                         margin-bottom: 15px;
-                        color: #8BC34A;
+                        color: #6c7c5c;
                         font-size: 3em;
                         font-weight: 400;
                         text-transform: uppercase;
@@ -535,7 +565,7 @@ class OrderController extends Controller
                     }
                     section table thead th {
                         padding: 5px 10px;
-                        background: #8BC34A;
+                        background: #6c7c5c;
                         border-bottom: 5px solid #FFFFFF;
                         border-right: 4px solid #FFFFFF;
                         text-align: right;
@@ -565,7 +595,7 @@ class OrderController extends Controller
                     }
                     section table tbody h3 {
                         margin-bottom: 5px;
-                        color: #8BC34A;
+                        color: #6c7c5c;
                         font-weight: 600;
                     }
                     section table tbody .desc {
@@ -588,7 +618,7 @@ class OrderController extends Controller
                     }
                     section table.grand-total tr:last-child td {
                         font-weight: 600;
-                        color: #8BC34A;
+                        color: #6c7c5c;
                         font-size: 1.18181818181818em;
                     }
             
@@ -597,7 +627,7 @@ class OrderController extends Controller
                     }
                     footer .thanks {
                         margin-bottom: 40px;
-                        color: #8BC34A;
+                        color: #6c7c5c;
                         font-size: 1.16666666666667em;
                         font-weight: 600;
                     }
@@ -606,7 +636,7 @@ class OrderController extends Controller
                     }
                     footer .end {
                         padding-top: 5px;
-                        border-top: 2px solid #8BC34A;
+                        border-top: 2px solid #6c7c5c;
                         text-align: center;
                     }
                 </style>
@@ -616,10 +646,10 @@ class OrderController extends Controller
                 <header class="clearfix">
                     <div class="container">
                         <div class="company-address">
-                            <h2 class="title">Multi-vendor E-commerce Application</h2>
+                            <h2 class="title">PADABA Trading System</h2>
                             <p>
-                                37 Salah Salem St.<br>
-                                Cairo, Egypt
+                                La Paz, Iloilo<br>
+                                Iloilo City
                             </p>
                         </div>
                         <div class="company-contact">
@@ -629,7 +659,7 @@ class OrderController extends Controller
                             </div>
                             <div class="email right">
                                 <span class="circle"><img src="data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIg0KCSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjE0LjE3M3B4Ig0KCSBoZWlnaHQ9IjE0LjE3M3B4IiB2aWV3Qm94PSIwLjM1NCAtMi4yNzIgMTQuMTczIDE0LjE3MyIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwLjM1NCAtMi4yNzIgMTQuMTczIDE0LjE3MyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSINCgk+DQo8dGl0bGU+ZW1haWwxOTwvdGl0bGU+DQo8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4NCjxnIGlkPSJQYWdlLTEiIHNrZXRjaDp0eXBlPSJNU1BhZ2UiPg0KCTxnIGlkPSJJTlZPSUNFLTEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00MTcuMDAwMDAwLCAtNTUuMDAwMDAwKSIgc2tldGNoOnR5cGU9Ik1TQXJ0Ym9hcmRHcm91cCI+DQoJCTxnIGlkPSJaQUdMQVZMSkUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMwLjAwMDAwMCwgMTUuMDAwMDAwKSIgc2tldGNoOnR5cGU9Ik1TTGF5ZXJHcm91cCI+DQoJCQk8ZyBpZD0iS09OVEFLVEkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI2Ny4wMDAwMDAsIDM1LjAwMDAwMCkiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPg0KCQkJCTxnIGlkPSJPdmFsLTEtX3gyQl8tZW1haWwxOSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTE3LjAwMDAwMCwgMC4wMDAwMDApIj4NCgkJCQkJPHBhdGggaWQ9ImVtYWlsMTkiIGZpbGw9IiM4QkMzNEEiIGQ9Ik0zLjM1NCwxNC4yODFoMTQuMTczVjUuMzQ2SDMuMzU0VjE0LjI4MXogTTEwLjQ0LDEwLjg2M0w0LjYyNyw2LjAwOGgxMS42MjZMMTAuNDQsMTAuODYzDQoJCQkJCQl6IE04LjEyNSw5LjgxMkw0LjA1LDEzLjIxN1Y2LjQwOUw4LjEyNSw5LjgxMnogTTguNjUzLDEwLjI1M2wxLjc4OCwxLjQ5M2wxLjc4Ny0xLjQ5M2w0LjAyOSwzLjM2Nkg0LjYyNEw4LjY1MywxMC4yNTN6DQoJCQkJCQkgTTEyLjc1NSw5LjgxMmw0LjA3NS0zLjQwM3Y2LjgwOEwxMi43NTUsOS44MTJ6Ii8+DQoJCQkJPC9nPg0KCQkJPC9nPg0KCQk8L2c+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=" alt=""><span class="helper"></span></span>
-                                <a href="mailto:company@example.com">company@example.com</a>
+                                <a href="mailto:padaba@gmail.com">padaba@gmail.com</a>
                                 <span class="helper"></span>
                             </div>
                         </div>
@@ -643,7 +673,7 @@ class OrderController extends Controller
                                 <p>INVOICE TO:</p>
                                 <p class="name">' . $orderDetails['name'] . '</p>
                                 <p>'
-                                    . $orderDetails['address'] . ', ' . $orderDetails['city'] . ', ' . $orderDetails['state'] . ', ' . $orderDetails['country'] . '-' . $orderDetails['pincode'] .
+                                    . $orderDetails['address']  . ', ' . $orderDetails['country'] . '-' . $orderDetails['pincode'] .
                                 '</p>
                                 <a href="mailto:' . $orderDetails['email'] . '">' . $orderDetails['email'] . '</a>
                             </div>
@@ -651,7 +681,7 @@ class OrderController extends Controller
                                 <div class="title">Order ID: ' . $orderDetails['id'] . '</div>
                                 <div class="date">
                                     Order Date: ' . date('Y-m-d h:i:s', strtotime($orderDetails['created_at'])) . '<br>
-                                    Order Amount: INR ' . $orderDetails['grand_total'] . '<br>
+                                    Order Amount: PHP ' . $orderDetails['grand_total'] . '<br>
                                     Order Status: ' . $orderDetails['order_status'] . '<br>
                                     Payment Method: ' . $orderDetails['payment_method'] . '<br>
                                 </div>
@@ -662,8 +692,7 @@ class OrderController extends Controller
                             <thead>
                                 <tr>
                                     <th class="desc">Product Code</th>
-                                    <th class="qty">Size</th>
-                                    <th class="qty">Color</th>
+                                    <th class="qty">Chicken Type</th>
                                     <th class="qty">Quantity</th>
                                     <th class="unit">Unit price</th>
                                     <th class="total">Total</th>
@@ -679,10 +708,9 @@ class OrderController extends Controller
                                     <tr>
                                         <td class="desc">' . $product['product_code'] . '</td>
                                         <td class="qty">' . $product['product_size'] . '</td>
-                                        <td class="qty">' . $product['product_color'] . '</td>
                                         <td class="qty">' . $product['product_qty'] . '</td>
-                                        <td class="unit">INR ' . $product['product_price'] . '</td>
-                                        <td class="total">INR ' . $product['product_price'] * $product['product_qty'] . '</td>
+                                        <td class="unit">PHP ' . $product['product_price'] . '</td>
+                                        <td class="total">PHP ' . $product['product_price'] * $product['product_qty'] . '</td>
                                     </tr>';
 
                                 // Continue: Calculate the Subtotal
@@ -701,14 +729,14 @@ class OrderController extends Controller
                                         <td class="desc"></td>
                                         <td class="desc"></td>
                                         <td class="total" colspan=2>SUBTOTAL</td>
-                                        <td class="total">INR ' . $subTotal . '</td>
+                                        <td class="total">PHP ' . $subTotal . '</td>
                                     </tr>
                                     <tr>
                                         <td class="desc"></td>
                                         <td class="desc"></td>
                                         <td class="desc"></td>
                                         <td class="total" colspan=2>SHIPPING</td>
-                                        <td class="total">INR 0</td>
+                                        <td class="total">PHP 0</td>
                                     </tr>
                                     <tr>
                                         <td class="desc"></td>
@@ -718,10 +746,10 @@ class OrderController extends Controller
 
                                         if ($orderDetails['coupon_amount'] > 0) {
                                             // We CONCATENATE $invoiceHTML
-                                            $invoiceHTML .= '<td class="total">INR '. $orderDetails['coupon_amount'] . '</td>';
+                                            $invoiceHTML .= '<td class="total">PHP '. $orderDetails['coupon_amount'] . '</td>';
                                         } else {
                                             // We CONCATENATE $invoiceHTML
-                                            $invoiceHTML .= '<td class="total">INR 0</td>';
+                                            $invoiceHTML .= '<td class="total">PHP 0</td>';
                                         }
 
                                         // We CONCATENATE $invoiceHTML
@@ -732,7 +760,7 @@ class OrderController extends Controller
                                         <td class="desc"></td>
                                         <td class="desc"></td>
                                         <td class="total" colspan="2">TOTAL</td>
-                                        <td class="total">INR ' . $orderDetails['grand_total'] . '</td>
+                                        <td class="total">PHP ' . $orderDetails['grand_total'] . '</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -761,7 +789,7 @@ class OrderController extends Controller
         $dompdf->loadHtml($invoiceHTML);
 
         // (Optional) Setup the paper size and orientation
-        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('A4', 'Landscape');
 
         // Render the HTML as PDF
         $dompdf->render();

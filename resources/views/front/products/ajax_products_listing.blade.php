@@ -22,9 +22,6 @@
 
                     </a>
                     <div class="item-action-behaviors">
-                        <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                        <a class="item-mail" href="javascript:void(0)">Mail</a>
-                        <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                         <a class="item-addCart" href="javascript:void(0)">Add to Cart</a>
                     </div>
                 </div>
@@ -38,7 +35,7 @@
 
 
 
-                                <a href="listing.html">{{ $product['product_color'] }}</a>
+                                
                             </li>
                             <li>
                                 <a href="listing.html">{{ $product['brand']['name'] }}</a>
@@ -66,16 +63,16 @@
                     @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                         <div class="price-template">
                             <div class="item-new-price">
-                                EGP{{ $getDiscountPrice }}
+                                ₱{{ $getDiscountPrice }}
                             </div>
                             <div class="item-old-price">
-                                EGP{{ $product['product_price'] }}
+                                ₱{{ $product['product_price'] }}
                             </div>
                         </div>
                     @else {{-- if there's no discount on the price, show the original price --}}
                         <div class="price-template">
                             <div class="item-new-price">
-                                EGP{{ $product['product_price'] }}
+                                ₱{{ $product['product_price'] }}
                             </div>
                         </div>
                     @endif

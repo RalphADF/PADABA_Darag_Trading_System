@@ -12,17 +12,7 @@
                         </div>
                         <div class="col-12 col-xl-4">
                             <div class="justify-content-end d-flex">
-                                <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                                    <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <i class="mdi mdi-calendar"></i> Today (10 Jan 2021)
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                                        <a class="dropdown-item" href="#">January - March</a>
-                                        <a class="dropdown-item" href="#">March - June</a>
-                                        <a class="dropdown-item" href="#">June - August</a>
-                                        <a class="dropdown-item" href="#">August - November</a>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -116,9 +106,9 @@
 
 
                                 <div class="form-group">
-                                    <label for="brand_id">Select Brand</label>
+                                    <label for="brand_id">Select Product Type</label>
                                     <select name="brand_id" id="brand_id" class="form-control text-dark">
-                                        <option value="">Select Brand</option>
+                                        <option value="">Select Product Type</option>
                                         @foreach ($brands as $brand)
                                             <option value="{{ $brand['id'] }}" @if (!empty($product['brand_id'] == $brand['id'])) selected @endif>{{ $brand['name'] }}</option>
                                         @endforeach
@@ -129,33 +119,39 @@
                                     <input type="text" class="form-control" id="product_name" placeholder="Enter Product Name" name="product_name" @if (!empty($product['product_name'])) value="{{ $product['product_name'] }}" @else value="{{ old('product_name') }}" @endif>  {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
                                 <div class="form-group">
-                                    <label for="product_code">Product Code</label>
-                                    <input type="text" class="form-control" id="product_code" placeholder="Enter Code" name="product_code" @if (!empty($product['product_code'])) value="{{ $product['product_code'] }}" @else value="{{ old('product_code') }}" @endif>  {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
+                                    <label for="product_code">Product Code (Auto-Generated)</label>
+                                    <input type="text" class="form-control" id="product_code" 
+                                        placeholder="{{ $rsbsaNumber }} -" 
+                                        name="product_code" 
+                                        value="{{ $product['product_code'] ?? old('product_code') }}" 
+                                        readonly>
                                 </div>
-                                <div class="form-group">
+
+
+                                <!--<div class="form-group">
                                     <label for="product_color">Product Color</label>
                                     <input type="text" class="form-control" id="product_color" placeholder="Enter Product Color" name="product_color" @if (!empty($product['product_color'])) value="{{ $product['product_color'] }}" @else value="{{ old('product_color') }}" @endif>  {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
-                                </div>
+                                </div>-->
                                 <div class="form-group">
                                     <label for="product_price">Product Price</label>
                                     <input type="text" class="form-control" id="product_price" placeholder="Enter Product Price" name="product_price" @if (!empty($product['product_price'])) value="{{ $product['product_price'] }}" @else value="{{ old('product_price') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
-                                <div class="form-group">
+                               <!-- <div class="form-group">
                                     <label for="product_discount">Product Discount (%)</label>
                                     <input type="text" class="form-control" id="product_discount" placeholder="Enter Product Discount" name="product_discount" @if (!empty($product['product_discount'])) value="{{ $product['product_discount'] }}" @else value="{{ old('product_discount') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
-                                </div>
+                                </div>-->
                                 <div class="form-group">
-                                    <label for="product_weight">Product Weight (%)</label>
+                                    <label for="product_weight">Product Weight (per gram (g))</label>
                                     <input type="text" class="form-control" id="product_weight" placeholder="Enter Product Weight" name="product_weight" @if (!empty($product['product_weight'])) value="{{ $product['product_weight'] }}" @else value="{{ old('product_weight') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
-                                </div>
+                                </div> 
 
 
 
                                 {{-- Managing Product Colors (in front/products/detail.blade.php) --}} 
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                     <label for="group_code">Group Code</label>
                                     <input type="text" class="form-control" id="group_code" placeholder="Enter Group Code" name="group_code"  @if (!empty($product['group_code'])) value="{{ $product['group_code'] }}" @else value="{{ old('group_code') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
-                                </div>
+                                </div>-->
 
 
 
@@ -191,7 +187,7 @@
                                     <label for="description">Product Description</label>
                                     <textarea name="description" id="description" class="form-control" rows="3">{{ $product['description'] }}</textarea>
                                 </div>
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                     <label for="meta_title">Meta Title</label>
                                     <input type="text" class="form-control" id="meta_title" placeholder="Enter Meta Title" name="meta_title"   @if (!empty($product['meta_title'])) value="{{ $product['meta_title'] }}" @else value="{{ old('meta_title') }}" @endif >  {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
@@ -202,15 +198,15 @@
                                 <div class="form-group">
                                     <label for="meta_keywords">Meta Keywords</label>
                                     <input type="text" class="form-control" id="meta_keywords" placeholder="Enter Meta Keywords" name="meta_keywords"   @if (!empty($product['meta_keywords'])) value="{{ $product['meta_keywords'] }}" @else value="{{ old('meta_keywords') }}" @endif >  {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
-                                </div>
+                                </div>-->
                                 <div class="form-group">
                                     <label for="is_featured">Featured Item (Yes/No)</label>
                                     <input type="checkbox" name="is_featured" id="is_featured" value="Yes" @if (!empty($product['is_featured']) && $product['is_featured'] == 'Yes') checked @endif>
                                 </div>
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                     <label for="is_bestseller">Best Seller Item (Yes/No)</label> {{-- Note: Only 'superadmin' can mark a product as 'bestseller', but 'vendor' can't --}}
                                     <input type="checkbox" name="is_bestseller" id="is_bestseller" value="Yes" @if (!empty($product['is_bestseller']) && $product['is_bestseller'] == 'Yes') checked @endif>
-                                </div>
+                                </div>-->
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                 <button type="reset"  class="btn btn-light">Cancel</button>
                             </form>

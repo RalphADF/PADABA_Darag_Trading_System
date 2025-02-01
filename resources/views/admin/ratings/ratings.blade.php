@@ -29,7 +29,7 @@
                             <div class="table-responsive pt-3">
                                 {{-- DataTable --}}
                                 <table id="ratings" class="table table-bordered"> {{-- using the id here for the DataTable --}}
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
                                             <th>ID</th>
                                             <th>Product Name</th>
@@ -90,7 +90,7 @@
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights reserved.</span>
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block"></span>
             </div>
         </footer>
         <!-- partial -->

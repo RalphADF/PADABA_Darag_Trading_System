@@ -47,12 +47,12 @@
     <section class="section-maker">
         <div class="container">
             <div class="sec-maker-header text-center">
-                <h3 class="sec-maker-h3">TOP COLLECTION</h3>
+                <h3 class="sec-maker-h3">Products</h3>
                 <ul class="nav tab-nav-style-1-a justify-content-center">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#men-latest-products">New Arrivals</a>
                     </li>
-                    <li class="nav-item">
+                   <!-- <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#men-best-selling-products">Best Sellers</a>
                     </li>
                     <li class="nav-item">
@@ -60,7 +60,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#men-featured-products">Featured Products</a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <div class="wrapper-content">
@@ -93,9 +93,6 @@
                                                     @endif
                                                 </a>
                                                 <div class="item-action-behaviors">
-                                                    <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                    <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                    <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                                                     <a class="item-addCart" href="{{ url('product/' . $product['id']) }}">Add to Cart</a>
                                                 </div>
                                             </div>
@@ -128,16 +125,16 @@
                                                 @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $getDiscountPrice }}
+                                                            ₱ {{ $getDiscountPrice }}
                                                         </div>
                                                         <div class="item-old-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @else {{-- if there's no discount on the price, show the original price --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @endif
@@ -181,9 +178,6 @@
                                                     @endif
                                                 </a>
                                                 <div class="item-action-behaviors">
-                                                    <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                    <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                    <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                                                     <a class="item-addCart" href="{{ url('product/' . $product['id']) }}">Add to Cart</a>
                                                 </div>
                                             </div>
@@ -212,16 +206,16 @@
                                                 @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $getDiscountPrice }}
+                                                            ₱ {{ $getDiscountPrice }}
                                                         </div>
                                                         <div class="item-old-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @else {{-- if there's no discount on the price, show the original price --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @endif
@@ -262,9 +256,6 @@
                                                     @endif
                                                 </a>
                                                 <div class="item-action-behaviors">
-                                                    <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                    <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                    <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                                                     <a class="item-addCart" href="{{ url('product/' . $product['id']) }}">Add to Cart</a>
                                                 </div>
                                             </div>
@@ -293,16 +284,16 @@
                                                 @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $getDiscountPrice }}
+                                                            ₱ {{ $getDiscountPrice }}
                                                         </div>
                                                         <div class="item-old-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @else {{-- if there's no discount on the price, show the original price --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @endif
@@ -343,9 +334,6 @@
                                                     @endif
                                                 </a>
                                                 <div class="item-action-behaviors">
-                                                    <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                    <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                    <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                                                     <a class="item-addCart" href="{{ url('product/' . $product['id']) }}">Add to Cart</a>
                                                 </div>
                                             </div>
@@ -374,16 +362,16 @@
                                                 @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $getDiscountPrice }}
+                                                            ₱ {{ $getDiscountPrice }}
                                                         </div>
                                                         <div class="item-old-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @else {{-- if there's no discount on the price, show the original price --}}
                                                     <div class="price-template">
                                                         <div class="item-new-price">
-                                                            Rs . {{ $product['product_price'] }}
+                                                            ₱ {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
                                                 @endif
@@ -433,9 +421,9 @@
                                 <i class="ion ion-md-star"></i>
                             </div>
                             <h2>
-                                Great Value
+                                Exceptional Quality
                             </h2>
-                            <p>We offer competitive prices on our 100 million plus product range</p>
+                            <p> Enjoy rich flavor, adaptability, and sustainability with our premium, locally raised Panay Darag Native Chicken</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -444,9 +432,9 @@
                                 <i class="ion ion-md-cash"></i>
                             </div>
                             <h2>
-                                Shop with Confidence
+                                Raise with Confidence
                             </h2>
-                            <p>Our Protection covers your purchase from click to delivery</p>
+                            <p> We ensure healthy, sustainable farming from hatch to harvest</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -455,9 +443,9 @@
                                 <i class="ion ion-ios-card"></i>
                             </div>
                             <h2>
-                                Safe Payment
+                                Secure Purchase
                             </h2>
-                            <p>Pay with the world’s most popular and secure payment methods</p>
+                            <p>Order your Panay Darag Native Chicken with peace of mind, using the most trusted and convenient payment method</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -466,9 +454,9 @@
                                 <i class="ion ion-md-contacts"></i>
                             </div>
                             <h2>
-                                24/7 Help Center
+                                Reliable Support
                             </h2>
-                            <p>Round-the-clock assistance for a smooth shopping experience</p>
+                            <p>Get expert guidance and assistance anytime, ensuring a seamless experience with your Panay Darag Native Chicken purchase </p>
                         </div>
                     </div>
                 </div>

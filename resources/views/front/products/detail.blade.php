@@ -81,10 +81,11 @@
 
                     <!-- Product-zoom-area -->
                     <div class="easyzoom easyzoom--overlay easyzoom--with-thumbnails"> {{-- EasyZoom plugin --}}
-                        <a      href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}">
-                            <img src="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}" alt="" width="500" height="500" />
+                        <a href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}">
+                            <img class="responsive-image" src="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}" alt="" />
                         </a>
                     </div>
+
 
                     <div class="thumbnails" style="margin-top: 30px"> {{-- EasyZoom plugin --}}
                         <a      href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}" data-standard="{{ asset('front/images/product_images/small/' . $productDetails['product_image']) }}">
@@ -158,7 +159,8 @@
                         <div class="section-1-title-breadcrumb-rating">
                             <div class="product-title">
                                 <h1>
-                                    <a href="javascript:;">{{ $productDetails['product_name'] }}</a> {{-- $productDetails is passed in from detail() method in Front/ProductsController.php --}}
+                                <a href="javascript:;">{{ $productDetails['product_name'] }} ({{ $productDetails['product_weight'] }} g)</a>
+                                {{-- $productDetails is passed in from detail() method in Front/ProductsController.php --}}
                                 </h1>
                             </div>
 
@@ -214,15 +216,15 @@
 
                                 @if ($getDiscountPrice > 0) {{-- if there's a discount on the product price --}}
                                     <div class="price">
-                                        <h4>EGP{{ $getDiscountPrice }}</h4>
+                                        <h4>₱{{ $getDiscountPrice }}</h4>
                                     </div>
                                     <div class="original-price">
                                         <span>Original Price:</span>
-                                        <span>EGP{{ $productDetails['product_price'] }}</span> {{-- the product original price (without discount) --}}
+                                        <span>₱{{ $productDetails['product_price'] }}</span> {{-- the product original price (without discount) --}}
                                     </div>
                                 @else {{-- if there's no discount on the product price --}}
                                     <div class="price">
-                                        <h4>EGP{{ $productDetails['product_price'] }}</h4> {{-- the product original price (without discount) --}}
+                                        <h4>₱{{ $productDetails['product_price'] }}</h4> {{-- the product original price (without discount) --}}
                                     </div>
                                 @endif
 
@@ -232,17 +234,14 @@
 
                         </div>
                         <div class="section-4-sku-information u-s-p-y-14">
-                            <h6 class="information-heading u-s-m-b-8">Sku Information:</h6>
+                           <!-- <h6 class="information-heading u-s-m-b-8">Product Info:</h6>
                             <div class="left">
                                 <span>Product Code:</span>
                                 <span>{{ $productDetails['product_code'] }}</span>
-                            </div>
-                            <div class="left">
-                                <span>Product Color:</span>
-                                <span>{{ $productDetails['product_color'] }}</span>
-                            </div>
+                            </div> -->
+                            
                             <div class="availability">
-                                <span>Availability:</span>
+                                <span></span>
 
 
                                 @if ($totalStock > 0)
@@ -259,7 +258,7 @@
 
                             @if ($totalStock > 0)
                                 <div class="left">
-                                    <span>Only:</span>
+                                    <span></span>
                                     <span>{{ $totalStock }} left</span>
                                 </div>
                             @endif
@@ -276,6 +275,12 @@
                                 {{-- Sold by: {{ $productDetails['vendor']['name'] }} --}}
                                 Sold by: <a href="/products/{{ $productDetails['vendor']['id'] }}">
                                             {{ $productDetails['vendor']['vendorbusinessdetails']['shop_name'] }}
+                                        </a>
+                            </div>
+                            <div>
+                                {{-- Address: {{ $productDetails['vendor']['address'] }} --}}
+                                Location: <a >
+                                            {{ $productDetails['vendor']['vendorbusinessdetails']['shop_address'] }}
                                         </a>
                             </div>
                         @endif
@@ -295,7 +300,7 @@
 
 
                                 {{-- Managing Product Colors (using the `group_code` column in `products` table) --}} 
-                                @if (count($groupProducts) > 0) {{-- if there's a value for the `group_code` column (in `products` table) for the currently viewed product --}}
+                               <!-- @if (count($groupProducts) > 0) {{-- if there's a value for the `group_code` column (in `products` table) for the currently viewed product --}}
                                     <div>
                                         <div><strong>Product Colors</strong></div>
                                         <div style="margin-top: 10px">
@@ -306,20 +311,20 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                @endif
+                                @endif -->
 
 
 
                                 <div class="sizes u-s-m-b-11" style="margin-top: 20px">
-                                    <span>Available Size:</span>
+                                    <span>Available Types:</span>
                                     <div class="size-variant select-box-wrapper">
                                         <select class="select-box product-size" id="getPrice" product-id="{{ $productDetails['id'] }}" name="size" required> {{-- Check front/js/custom.js file --}}
 
 
 
-                                            <option value="">Select Size</option>
+                                            <option value="">Select Type</option>
                                             @foreach ($productDetails['attributes'] as $attribute)
-                                                <option value="{{ $attribute['size'] }}">{{ $attribute['size'] }}</option>
+                                                <option value="{{ $attribute['size'] }}">{{ $attribute['size'] }} ({{ $attribute['stock'] }} left)</option>
                                             @endforeach
 
 
@@ -339,8 +344,6 @@
                                 </div>
                                 <div>
                                     <button class="button button-outline-secondary" type="submit">Add to cart</button>
-                                    <button class="button button-outline-secondary far fa-heart u-s-m-l-6"></button>
-                                    <button class="button button-outline-secondary far fa-envelope u-s-m-l-6"></button>
                                 </div>
 
 
@@ -350,9 +353,9 @@
 
 
                         {{-- PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not via AJAX. Check front/js/custom.js --}} 
-                        <br><br><b>Delivery</b>
+                        <!--<br><br><b>Delivery</b>
                         <input type="text" id="pincode" placeholder="Check Pincode" required>
-                        <button type="button" id="checkPincode">Go</button> {{-- We'll use that checkPincode HTML id attribute in front/js/custom.js as a handle for jQuery --}}
+                        <button type="button" id="checkPincode">Go</button>--> {{-- We'll use that checkPincode HTML id attribute in front/js/custom.js as a handle for jQuery --}}
 
 
                     </div>
@@ -402,7 +405,7 @@
                             <div class="tab-pane fade" id="detail">
                                 <div class="specification-whole-container">
                                     <div class="spec-table u-s-m-b-50">
-                                        <h4 class="spec-heading">Product Details</h4>
+                                        <h4 class="spec-heading" style="color: black;">Product Details</h4>
                                         <table>
 
 
@@ -558,7 +561,7 @@
                                         <!-- Review-Options -->
                                         <div class="review-options u-s-m-b-16">
                                             <div class="review-option-heading">
-                                                <h6>Reviews
+                                                <h6 style="color: orange;">Reviews
                                                     <span> ({{ count($ratings) }}) </span>
                                                 </h6>
                                             </div>
@@ -654,9 +657,6 @@
 
                                             </a>
                                             <div class="item-action-behaviors">
-                                                <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                                                 <a class="item-addCart" href="javascript:void(0)">Add to Cart</a>
                                             </div>
                                         </div>
@@ -669,9 +669,7 @@
 
                                                         <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
                                                     </li>
-                                                    <li class="has-separator">
-                                                        <a href="listing.html">{{ $product['product_color'] }}</a>
-                                                    </li>
+                                                    
                                                     <li>
                                                         <a href="listing.html">{{ $product['brand']['name'] }}</a>
 
@@ -695,16 +693,16 @@
                                             @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $getDiscountPrice }} 
+                                                        ₱{{ $getDiscountPrice }} 
                                                     </div>
                                                     <div class="item-old-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₱{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @else {{-- if there's no discount on the price, show the original price --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₱{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @endif
@@ -759,9 +757,6 @@
 
                                             </a>
                                             <div class="item-action-behaviors">
-                                                <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                                                 <a class="item-addCart" href="javascript:void(0)">Add to Cart</a>
                                             </div>
                                         </div>
@@ -799,16 +794,16 @@
                                             @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $getDiscountPrice }} 
+                                                        ₱{{ $getDiscountPrice }} 
                                                     </div>
                                                     <div class="item-old-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₱{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @else {{-- if there's no discount on the price, show the original price --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₱{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @endif
@@ -833,5 +828,18 @@
             <!-- Different-Product-Section /- -->
         </div>
     </div>
+    <style>
+    .responsive-image {
+        width: 100%;
+        height: auto;
+        max-width: 500px; /* Default size for larger screens */
+    }
+
+    @media (max-width: 768px) { /* Target screens smaller than 768px */
+        .responsive-image {
+            max-width: 300px; /* Reduce size for mobile */
+        }
+    }
+</style>
     <!-- Single-Product-Full-Width-Page /- -->
 @endsection

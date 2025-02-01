@@ -29,9 +29,6 @@
 
                     </a>
                     <div class="item-action-behaviors">
-                        <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                        <a class="item-mail" href="javascript:void(0)">Mail</a>
-                        <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
                         <a class="item-addCart" href="javascript:void(0)">Add to Cart</a>
                     </div>
                 </div>
@@ -41,9 +38,7 @@
                             <li class="has-separator">
                                 <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
                             </li>
-                            <li class="has-separator">
-                                <a href="listing.html">{{ $product['product_color'] }}</a>
-                            </li>
+                           
                             <li>
                                 <a href="listing.html">{{ $product['brand']['name'] }}</a>
                             </li>

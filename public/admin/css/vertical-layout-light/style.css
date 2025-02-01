@@ -10279,14 +10279,14 @@ pre code {
 .table-warning,
 .table-warning > th,
 .table-warning > td {
-  background-color: #ffeeb8;
+  background-color: #6f7d5f;
 }
 
 .table-warning th,
 .table-warning td,
 .table-warning thead th,
 .table-warning tbody + tbody {
-  border-color: #ffdf7a;
+  border-color: #6f7d5f;
 }
 
 .table-hover .table-warning:hover {
@@ -19464,7 +19464,10 @@ h3, .h3 {
 }
 
 h4, .h4 {
-  font-size: 1.125rem;
+  font-family: 'Poppins', sans-serif; 
+  font-weight: 700;
+  color: #000000;
+  font-size: 2.125rem;
 }
 
 h5, .h5 {
@@ -22000,7 +22003,7 @@ code {
 }
 
 .card .card-title {
-  color: #010101;
+  color: #6f7d5f;
   margin-bottom: 1.2rem;
   text-transform: capitalize;
   font-size: 1.125rem;
@@ -22077,12 +22080,12 @@ code {
 }
 
 .card.card-tale {
-  background: #7DA0FA;
+  background: #6f7d5f;
   color: #ffffff;
 }
 
 .card.card-tale:hover {
-  background: #96b2fb;
+  background: #8e9c7e;
 }
 
 .card.card-dark-blue {
@@ -22095,21 +22098,21 @@ code {
 }
 
 .card.card-light-blue {
-  background: #7978E9;
+  background: #6f7d5f;
   color: #ffffff;
 }
 
 .card.card-light-blue:hover {
-  background: #8f8eed;
+  background: #8e9c7e;
 }
 
 .card.card-light-danger {
-  background: #F3797E;
-  color: #ffffff;
+  background: #b78347;
+  color: #ffffff;#b78347
 }
 
 .card.card-light-danger:hover {
-  background: #f59095;
+  background: #d1a36d;
 }
 
 .card-inverse-primary {
@@ -22367,7 +22370,7 @@ code {
   width: 18px;
   height: 18px;
   border-radius: 2px;
-  border: solid #052CA3;
+  border: solid #000000;
   border-width: 2px;
   -webkit-transition: all;
   -moz-transition: all;
@@ -23838,8 +23841,8 @@ dl li {
 .pagination .page-item:active .jsgrid .jsgrid-pager .jsgrid-pager-page a,
 .jsgrid .jsgrid-pager .page-item:active .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:active a,
 .jsgrid .jsgrid-pager .jsgrid-pager-page:active a {
-  background: #052CA3;
-  border-color: #052CA3;
+  background: #6f7d5f;
+  border-color: #6f7d5f;
   color: #ffffff;
 }
 
@@ -28404,6 +28407,13 @@ div.tagsinput span.tag a {
 .auth form .auth-form-btn {
   padding: 1rem 3rem;
   line-height: 1.5;
+  background-color: #6f7d5f; /* Set button background color */
+  color: white; /* Text color */
+  border: none; /* No border */
+  border-radius: 7px; /* Rounded corners */
+  font-size: 17px; /* Font size */
+  cursor: pointer; /* Cursor style on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition effects */
 }
 
 .auth form .auth-link {
@@ -28439,6 +28449,7 @@ div.tagsinput span.tag a {
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
+  border: none;
 }
 
 @media (max-width: 991px) {
@@ -28495,6 +28506,7 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item .collapse {
   z-index: 999;
+  color: #6f7d5f;
 }
 
 .sidebar .nav .nav-item .nav-link {
@@ -28622,7 +28634,7 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link, .sidebar .nav:not(.sub-menu) > .nav-item:hover[aria-expanded="true"] {
-  background: #052CA3;
+  background: #6f7d5f;
   color: #fff;
 }
 
@@ -28632,7 +28644,7 @@ div.tagsinput span.tag a {
 
 .sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded="true"] {
   border-radius: 8px 8px 0 0;
-  background: #052CA3;
+  background: #6f7d5f;
   color: #fff;
 }
 

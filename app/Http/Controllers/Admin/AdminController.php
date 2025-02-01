@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // Auth without a namespace here works fine because the Admin.php model extends Authenticatable
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\VarDumper\VarDumper;
+use Barryvdh\DomPDF\Facade\PDF;
 
 use App\Models\Admin;
 use App\Models\Section;
@@ -27,23 +29,121 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function dashboard() {
-        // Correcting issues in the Skydash Admin Panel Sidebar using Session:
-        Session::put('page', 'dashboard');
+    public function downloadDashboardPDF(Request $request)
+    {
+        // Get year and month filters from the request
+        $year = $request->input('year');
+        $month = $request->input('month');
 
+        // Query the orders based on the filters
+        $ordersQuery = Order::where('order_status', 'Paid');
 
-        $sectionsCount   = Section::count();
-        $categoriesCount = Category::count();
-        $productsCount   = Product::count();
-        $ordersCount     = Order::count();
-        $couponsCount    = Coupon::count();
-        $brandsCount     = Brand::count();
-        $usersCount      = User::count();
+        if ($year) {
+            $ordersQuery->whereYear('created_at', $year);
+        }
 
+        if ($month) {
+            $ordersQuery->whereMonth('created_at', $month);
+        }
 
-        return view('admin/dashboard')->with(compact('sectionsCount', 'categoriesCount', 'productsCount', 'ordersCount', 'couponsCount', 'brandsCount', 'usersCount')); // is the same as:    return view('admin.dashboard');
+        // Get the sum of grand_total by year or month where order_status is 'Paid'
+        $ordersByTime = $ordersQuery->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(grand_total) as total')
+                                    ->groupBy('year', 'month')
+                                    ->orderBy('year', 'asc')
+                                    ->orderBy('month', 'asc')
+                                    ->get();
+
+        // Format the data for use in the chart
+        $years = $ordersByTime->pluck('year')->unique();
+        $months = $ordersByTime->pluck('month')->unique();
+        $totals = $ordersByTime->pluck('total');
+
+        // Get the total sum of grand_total for all filtered paid orders
+        $totalPaidOrders = $ordersByTime->sum('total');
+
+        // Other counts
+        $vendorWithRsbsaCount = Admin::where('type', 'vendor')->whereNotNull('rsbsaNumber')->count();
+        $vendorWithoutRsbsaCount = Admin::where('type', 'vendor')->whereNull('rsbsaNumber')->count();
+        $vendorCount = Admin::where('type', 'vendor')->where('status', 0)->count();
+        $productsCount = Product::count();
+        $ordersCount = Order::count();
+        $brandsCount = Order::where('order_status', 'New')->count();
+        $usersCount = User::count();
+
+        // Prepare the data for the PDF view
+        $data = compact(
+            'productsCount', 'ordersCount', 'brandsCount', 'usersCount', 
+            'totalPaidOrders', 'totals', 'years', 'months', 'vendorCount',
+            'vendorWithRsbsaCount', 'vendorWithoutRsbsaCount'
+        );
+
+        // Render the PDF
+        $pdf = PDF::loadView('admin.dashboard-pdf', $data);
+
+        // Download the PDF
+        return $pdf->download('dashboard-summary.pdf');
     }
 
+    public function dashboard(Request $request) {
+        // Correcting issues in the Skydash Admin Panel Sidebar using Session:
+        Session::put('page', 'dashboard');
+        // Get year and month filters from the request
+        $year = $request->input('year');
+        $month = $request->input('month');
+    
+        // Query the orders based on the filters
+        $ordersQuery = Order::where('order_status', 'Delivered & Paid');
+    
+        if ($year) {
+            $ordersQuery->whereYear('created_at', $year);
+        }
+    
+        if ($month) {
+            $ordersQuery->whereMonth('created_at', $month);
+        }
+    
+        // Get the sum of grand_total by year or month where order_status is 'Paid'
+        $ordersByTime = $ordersQuery->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(grand_total) as total')
+                                    ->groupBy('year', 'month')
+                                    ->orderBy('year', 'asc')
+                                    ->orderBy('month', 'asc')
+                                    ->get();
+    
+        // Format the data for use in the chart
+        $years = $ordersByTime->pluck('year')->unique();
+        $months = $ordersByTime->pluck('month')->unique();
+        $totals = $ordersByTime->pluck('total');
+        
+        // Get the total sum of grand_total for all filtered paid orders
+        $totalPaidOrders = $ordersByTime->sum('total');
+    
+        // Other counts
+        $vendorWithRsbsaCount = Admin::where('type', 'vendor')->whereNotNull('rsbsaNumber')->count();
+        $vendorWithoutRsbsaCount = Admin::where('type', 'vendor')->whereNull('rsbsaNumber')->count();
+        $vendorCount = Admin::where('type', 'vendor')->where('status', 0)->count();
+        $productsCount = Product::count();
+        $ordersCount = Order::count();
+        $brandsCount = Order::where('order_status', 'New')->count();
+        $usersCount = User::count();
+        // Add Calendar: Fetch orders with delivery_schedule for display
+        $calendarOrders = Order::whereNotNull('delivery_schedule')
+                               ->select('id', 'name', 'delivery_schedule', 'order_status')
+                               ->orderBy('delivery_schedule', 'asc')
+                               ->get();
+
+         // Format the data for use in the chart
+
+                    
+                       
+
+        return view('admin.dashboard')->with(compact(
+            'productsCount', 'ordersCount', 'brandsCount', 'usersCount', 
+            'totalPaidOrders', 'totals', 'years', 'months', 'vendorCount',
+            'vendorWithRsbsaCount', 'vendorWithoutRsbsaCount', 'calendarOrders',
+            'ordersByTime'
+        ));
+    }
+    
     public function login(Request $request) { // Logging in using our 'admin' guard (whether 'vendor' or 'admin' (depending on the `type` and `vendor_id` columns in `admins` table)) we created in auth.php
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -68,6 +168,9 @@ class AdminController extends Controller
             if (Auth::guard('admin')->attempt(['email' => $data['email'], 'password' => $data['password']])) { // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
                 if (Auth::guard('admin')->user()->type == 'vendor' && Auth::guard('admin')->user()->confirm == 'No') { // if the entity trying to login is 'vendor' and not 'admin' (i.e. `type` column is `vendor`, and `vendor_id` is not zero 0 in `admins` table)    // check the `type` column in the `admins` table for if the logging in user is 'venodr', and check the `confirm` column if the vendor is not yet confirmed (`confirm` = 'No'), then don't allow logging in    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
                     return redirect()->back()->with('error_message', 'Please confirm your email to activate your Vendor Account');
+
+                } else if (Auth::guard('admin')->user()->type == 'vendor') { // if the entity trying to login is 'vendor' and not 'admin' (i.e. `type` column is `vendor`, and `vendor_id` is not zero 0 in `admins` table)    // check the `type` column in the `admins` table for if the logging in user is 'venodr', and check the `confirm` column if the vendor is not yet confirmed (`confirm` = 'No'), then don't allow logging in    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
+                    return redirect('/admin/orders');
 
                 } else if (Auth::guard('admin')->user()->type != 'vendor' && Auth::guard('admin')->user()->status == '0') { // if the entity trying to login is 'admin' and not 'vendor' (i.e. `type` column is `superadmin` or `admin`, and `vendor_id` is zero 0 in `admins` table)    // check the `type` column in the `admins` table for if the logging in user is 'admin' or 'superadmin' (not 'vendor'), and check the `status` column if the 'admin' or 'superadmin' is inactive/disabled (`status` = 0), then don't allow logging in    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
                     return redirect()->back()->with('error_message', 'Your admin account is not active');
@@ -139,7 +242,7 @@ class AdminController extends Controller
         }
     }
 
-    public function updateAdminDetails(Request $request) { // the update_admin_details.blade.php
+    public function updateAdminDetails(Request $request) { // the update_admin_details.blade.php  
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'update_admin_details');
 
@@ -219,7 +322,7 @@ class AdminController extends Controller
 
                 // Laravel's Validation    // Customizing Laravel's Validation Error Messages: https://laravel.com/docs/9.x/validation#customizing-the-error-messages    // Customizing Validation Rules: https://laravel.com/docs/9.x/validation#custom-validation-rules
                 $rules = [
-                    'vendor_name'   => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
+                    'vendor_name' => 'required|string|max:255', // only alphabetical characters and spaces
                     'vendor_city'   => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
                     'vendor_mobile' => 'required|numeric',
                 ];
@@ -303,7 +406,6 @@ class AdminController extends Controller
                     'shop_name'           => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
                     'shop_city'           => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
                     'shop_mobile'         => 'required|numeric',
-                    'address_proof'       => 'required',
                 ];
 
                 $customMessages = [ // Specifying A Custom Message For A Given Attribute: https://laravel.com/docs/9.x/validation#specifying-a-custom-message-for-a-given-attribute
@@ -349,16 +451,13 @@ class AdminController extends Controller
                     VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->update([ // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
                         'shop_name'               => $data['shop_name'],
                         'shop_mobile'             => $data['shop_mobile'],
-                        'shop_website'            => $data['shop_website'],
                         'shop_address'            => $data['shop_address'],
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
                         'shop_country'            => $data['shop_country'],
                         'shop_pincode'            => $data['shop_pincode'],
-                        'business_license_number' => $data['business_license_number'],
-                        'gst_number'              => $data['gst_number'],
-                        'pan_number'              => $data['pan_number'],
-                        'address_proof'           => $data['address_proof'],
+                        //'gst_number'              => $data['gst_number'],
+                        //'address_proof'           => $data['address_proof'],
                         'address_proof_image'     => $imageName,
                     ]);
 
@@ -368,16 +467,13 @@ class AdminController extends Controller
                         'vendor_id'               => Auth::guard('admin')->user()->vendor_id, // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
                         'shop_name'               => $data['shop_name'],
                         'shop_mobile'             => $data['shop_mobile'],
-                        'shop_website'            => $data['shop_website'],
                         'shop_address'            => $data['shop_address'],
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
                         'shop_country'            => $data['shop_country'],
                         'shop_pincode'            => $data['shop_pincode'],
-                        'business_license_number' => $data['business_license_number'],
-                        'gst_number'              => $data['gst_number'],
-                        'pan_number'              => $data['pan_number'],
-                        'address_proof'           => $data['address_proof'],
+                        //'gst_number'              => $data['gst_number'],
+                        //'address_proof'           => $data['address_proof'],
                         'address_proof_image'     => $imageName,
                     ]);
                 }
@@ -418,7 +514,7 @@ class AdminController extends Controller
                     'account_holder_name.regex'    => 'Valid Account Holder Name is required',
                     'account_number.required'      => 'Account Number is required',
                     'account_number.numeric'       => 'Valid Account Number is required',
-                    'bank_ifsc_code.required'      => 'Bank IFSC Code is required',
+                    'bank_ifsc_code.required'      => 'Bank SWIFT/BIC Code is required',
                 ];
 
                 $this->validate($request, $rules, $customMessages);
@@ -488,15 +584,31 @@ class AdminController extends Controller
         $admins = Admin::query();
         // dd($admins);
 
-        if (!empty($type)) { // in this case, $type can be: superadmin, admin, subadmin or vendor
+        if (!empty($type == 'admin')) { // in this case, $type can be: superadmin, admin, subadmin or vendor
             $admins = $admins->where('type', $type);
-            $title = ucfirst($type) . 's';
+            $title =  'Admins';
 
             // Correcting issues in the Skydash Admin Panel Sidebar using Session
             Session::put('page', 'view_' . strtolower($title));
 
-        } else { // if there's no $type is passed, show ALL of the admins, subadmins and vendors
-            $title = 'All Admins/Subadmins/Vendors';
+        } 
+        
+        elseif (!empty($type == 'subadmin')) { // in this case, $type can be: superadmin, admin, subadmin or vendor
+            $admins = $admins->where('type', $type);
+            $title = 'Delivery Drivers';
+            // Correcting issues in the Skydash Admin Panel Sidebar using Session
+            Session::put('page', 'view_' . strtolower($title));
+
+        }
+
+        elseif (!empty($type == 'vendor')) { // in this case, $type can be: superadmin, admin, subadmin or vendor
+            $admins = $admins->where('type', $type);
+            $title = 'Breeders';
+            // Correcting issues in the Skydash Admin Panel Sidebar using Session
+            Session::put('page', 'view_' . strtolower($title));
+        }
+        else { // if there's no $type is passed, show ALL of the admins, subadmins and vendors
+            $title = 'All Admins/Delivery Drivers/Breeders';
 
             // Correcting issues in the Skydash Admin Panel Sidebar using Session
             Session::put('page', 'view_all');
@@ -511,7 +623,7 @@ class AdminController extends Controller
     public function viewVendorDetails($id) { // View further 'vendor' details inside Admin Management table (if the authenticated user is superadmin, admin or subadmin)
         $vendorDetails = Admin::with('vendorPersonal', 'vendorBusiness','vendorBank')->where('id', $id)->first(); // Using the relationship defined in the Admin.php model to be able to get data from `vendors`, `vendors_business_details` and `vendors_bank_details` tables
         $vendorDetails = json_decode(json_encode($vendorDetails), true); // We used json_decode(json_encode($variable), true) to convert $vendorDetails to an array instead of Laravel's toArray() method
-        // dd($vendorDetails);
+        //dd($vendorDetails);
 
         return view('admin/admins/view_vendor_details')->with(compact('vendorDetails'));
     }
@@ -570,4 +682,37 @@ class AdminController extends Controller
         }
     }
 
+    public function addDeliveryDriverForm() {
+        return view('admin.admins.add_delivery_driver');
+    }
+    public function saveDeliveryDriver(Request $request) {
+        $data = $request->all();
+    
+        // Hash the password before saving
+        $data['password'] = bcrypt($data['password']);
+    
+        // Insert into the database and get the inserted ID
+        $insertedId = DB::table('admins')->insertGetId([
+            'name' => $data['name'],
+            'mname' => $data['mname'],
+            'lname' => $data['lname'],
+            'type' => $data['type_value'],
+            'mobile' => $data['mobile'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'confirm' => $data['confirm'],
+            'status' => $data['status'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    
+        // Update the vendor_id to be the same as the auto-incremented ID
+        DB::table('admins')->where('id', $insertedId)->update([
+            'vendor_id' => $insertedId
+        ]);
+    
+        return redirect('admin/admins/subadmin')->with('success_message', 'Delivery Driver added successfully!');
+    }
+    
+        
 }

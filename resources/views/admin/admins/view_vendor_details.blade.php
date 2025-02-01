@@ -8,22 +8,12 @@
                 <div class="col-md-12 grid-margin">
                     <div class="row">
                         <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                            <h3 class="font-weight-bold">Vendor Details</h3>
-                            <h6 class="font-weight-normal mb-0"><a href="{{ url('admin/admins/vendor') }}">Back to Vendors</a></h6>
+                            <h3 class="font-weight-bold">Breeder Details</h3>
+                            <h6 class="font-weight-normal mb-0"><a href="{{ url('admin/admins/vendor') }}">Back to Breeders</a></h6>
                         </div>
                         <div class="col-12 col-xl-4">
                             <div class="justify-content-end d-flex">
-                                <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                                    <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <i class="mdi mdi-calendar"></i> Today (10 Jan 2021)
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                                        <a class="dropdown-item" href="#">January - March</a>
-                                        <a class="dropdown-item" href="#">March - June</a>
-                                        <a class="dropdown-item" href="#">June - August</a>
-                                        <a class="dropdown-item" href="#">August - November</a>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -39,36 +29,44 @@
                                 <input class="form-control" value="{{ $vendorDetails['vendor_personal']['email'] }}" readonly> <!-- Check updateAdminPassword() method in AdminController.php -->
                             </div>
                             <div class="form-group">
-                                <label for="vendor_name">Name</label>
+                                <label for="vendor_name">First Name</label>
                                 <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['name'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
+                            </div>
+                            <div class="form-group">
+                                <label for="vendor_mname">Middle Name</label>
+                                <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['mname'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
+                            </div>
+                            <div class="form-group">
+                                <label for="vendor_lname">Last Name</label>
+                                <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['lname'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
                                 <label for="vendor_address">Address</label>
                                 <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['address'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
-                                <label for="vendor_city">City</label>
+                                <label for="vendor_city">Sex</label>
                                 <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['city'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
-                                <label for="vendor_state">State</label>
+                                <label for="vendor_state">Birth Date</label>
                                 <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['state'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
-                                <label for="vendor_country">Country</label>
+                                <label for="vendor_country">Municipality/District</label>
                                 <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['country'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
-                                <label for="vendor_pincode">Pincode</label>
+                                <label for="vendor_pincode">Zip Code</label>
                                 <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['pincode'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
-                                <label for="vendor_mobile">Mobile</label>
+                                <label for="vendor_mobile">Mobile No.</label>
                                 <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['mobile'] }}" readonly>
                             </div>
                             @if (!empty($vendorDetails['image']))
                                 <div class="form-group">
-                                    <label for="vendor_image">Vendor Photo</label>
+                                    <label for="vendor_image">Breeder Photo</label>
                                     <br>
                                     <img style="width: 200px" src="{{ url('admin/images/photos/' . $vendorDetails['image']) }}">
                                 </div>
@@ -76,6 +74,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-md-6 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
@@ -92,49 +91,76 @@
                                 <label for="vendor_city">Shop City</label>
                                 <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_city'])) value="{{ $vendorDetails['vendor_business']['shop_city'] }}" @endif  readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
+
                             <div class="form-group">
-                                <label for="vendor_state">Shop State</label>
-                                <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_state'])) value="{{ $vendorDetails['vendor_business']['shop_state'] }}" @endif  readonly> {{-- $vendorDetails was passed from AdminController --}}
+                                <label for="vendor_state">Shop Map Location</label>
                             </div>
+
+                            <!-- Add a div to display the map -->
+                            <div id="map" style="height: 400px; width: 100%;"></div>
+
+                            <!-- Google Maps JavaScript API -->
+                            <script async defer
+                                src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.javascript_api_key') }}&callback=initMap">
+                            </script>
+
+                            <script>
+                                function initMap() {
+                                    // Check if the latitude and longitude are available
+                                    const latitude = parseFloat("{{ isset($vendorDetails['vendor_business']['shop_pincode']) ? $vendorDetails['vendor_business']['shop_pincode'] : '0' }}");
+                                    const longitude = parseFloat("{{ isset($vendorDetails['vendor_business']['shop_state']) ? $vendorDetails['vendor_business']['shop_state'] : '0' }}");
+
+
+                                    if (!isNaN(latitude) && !isNaN(longitude)) {
+                                        // Create a new map centered at the given coordinates
+                                        const map = new google.maps.Map(document.getElementById("map"), {
+                                            center: { lat: latitude, lng: longitude },
+                                            zoom: 17,
+                                        });
+
+                                        // Place a marker at the location
+                                        const marker = new google.maps.Marker({
+                                            position: { lat: latitude, lng: longitude },
+                                            map: map,
+                                            title: "Shop Location", // Title of the marker
+                                        });
+                                    } else {
+                                        alert("Invalid coordinates for the shop location.");
+                                    }
+                                }
+                            </script>
+
                             <div class="form-group">
-                                <label for="vendor_country">Shop Country</label>
+                                <label for="vendor_country">Shop Municipality/District</label>
                                 <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_country'])) value="{{ $vendorDetails['vendor_business']['shop_country'] }}" @endif readonly> {{-- $vendorDetails was passed from AdminController --}}
-                            </div>
-                            <div class="form-group">
-                                <label for="vendor_pincode">Shop Pincode</label>
-                                <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_pincode'])) value="{{ $vendorDetails['vendor_business']['shop_pincode'] }}" @endif  readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
                                 <label for="vendor_mobile">Shop Mobile</label>
                                 <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_mobile'])) value="{{ $vendorDetails['vendor_business']['shop_mobile'] }}" @endif  readonly>
                             </div>
-                            <div class="form-group">
+                           <!-- <div class="form-group">
                                 <label for="vendor_mobile">Shop Website</label>
                                 <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_website'])) value="{{ $vendorDetails['vendor_business']['shop_website'] }}" @endif  readonly>
-                            </div>
+                            </div> 
                             <div class="form-group">
                                 <label>Shop Email</label>
-                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_email'])) value="{{ $vendorDetails['vendor_business']['shop_email'] }}" @endif  readonly> <!-- Check updateAdminPassword() method in AdminController.php -->
-                            </div>
+                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['shop_email'])) value="{{ $vendorDetails['vendor_business']['shop_email'] }}" @endif  readonly>
+                            </div>-->
+                            <!--<div class="form-group">
+                                <label>RSBSA Number</label>
+                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['business_license_number'])) value="{{ $vendorDetails['vendor_business']['business_license_number'] }}" @endif  readonly> 
+                            </div>-->
+                            <!--<div class="form-group">
+                                <label>Other Permit Nos.</label>
+                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['gst_number'])) value="{{ $vendorDetails['vendor_business']['gst_number'] }}" @endif  readonly> 
+                            </div> 
                             <div class="form-group">
-                                <label>Business License Number</label>
-                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['business_license_number'])) value="{{ $vendorDetails['vendor_business']['business_license_number'] }}" @endif  readonly> <!-- Check updateAdminPassword() method in AdminController.php -->
-                            </div>
-                            <div class="form-group">
-                                <label>GST Number</label>
-                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['gst_number'])) value="{{ $vendorDetails['vendor_business']['gst_number'] }}" @endif  readonly> <!-- Check updateAdminPassword() method in AdminController.php -->
-                            </div>
-                            <div class="form-group">
-                                <label>PAN Number</label>
-                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['pan_number'])) value="{{ $vendorDetails['vendor_business']['pan_number'] }}" @endif  readonly> <!-- Check updateAdminPassword() method in AdminController.php -->
-                            </div>
-                            <div class="form-group">
-                                <label>Address Proof</label>
-                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['address_proof'])) value="{{ $vendorDetails['vendor_business']['address_proof'] }}" @endif  readonly> <!-- Check updateAdminPassword() method in AdminController.php -->
-                            </div>
+                                <label>Other Permits (Optional)</label>
+                                <input class="form-control"  @if (isset($vendorDetails['vendor_business']['address_proof'])) value="{{ $vendorDetails['vendor_business']['address_proof'] }}" @endif  readonly>  Check updateAdminPassword() method in AdminController.php 
+                            </div>-->
                             @if (!empty($vendorDetails['vendor_business']['address_proof_image']))
                                 <div class="form-group">
-                                    <label for="vendor_image">Address Proof Image</label>
+                                    <label for="vendor_image">Business Permit Image</label>
                                     <br>
                                     <img style="width: 200px" src="{{ url('admin/images/proofs/' . $vendorDetails['vendor_business']['address_proof_image']) }}">
                                 </div>
@@ -142,6 +168,8 @@
                         </div>
                     </div>
                 </div>
+
+
                 <div class="col-md-6 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
@@ -159,7 +187,7 @@
                                 <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_bank']['account_number'])) value="{{ $vendorDetails['vendor_bank']['account_number'] }}" @endif  readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
-                                <label for="vendor_city">Bank IFSC Code</label>
+                                <label for="vendor_city">Bank SWIFT/BIC Code</label>
                                 <input type="text" class="form-control"  @if (isset($vendorDetails['vendor_bank']['bank_ifsc_code'])) value="{{ $vendorDetails['vendor_bank']['bank_ifsc_code'] }}" @endif  readonly> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                         </div>

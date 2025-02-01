@@ -14,14 +14,14 @@ $sections = \App\Models\Section::sections();
             <nav>
                 <ul class="primary-nav g-nav">
                     <li>
-                        <a href="tel:+201255845857">
+                        <a href="tel:09123456789">
                         <i class="fas fa-phone u-c-brand u-s-m-r-9"></i>
-                        Telephone: +201255845857</a>
+                        Telephone: 09123456789</a>
                     </li>
                     <li>
-                        <a href="mailto:info@multi-vendore-commerce.com">
+                        <a href="mailto:padaba@gmail.com">
                         <i class="fas fa-envelope u-c-brand u-s-m-r-9"></i>
-                        E-mail: info@multi-vendore-commerce.com
+                        E-mail: padaba@gmail.com
                         </a>
                     </li>
                 </ul>
@@ -89,7 +89,7 @@ $sections = \App\Models\Section::sections();
                                 <li>
                                     <a href="{{ url('vendor/login-register') }}">
                                         <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
-                                        Vendor Login
+                                        Breeder Login
                                     </a>
                                 </li>
                             @endif
@@ -98,36 +98,28 @@ $sections = \App\Models\Section::sections();
 
                         </ul>
                     </li>
-                    <li>
-                        <a>EGP
+                   <!-- Top-Header  <li>
+                        <a>₱
                         <i class="fas fa-chevron-down u-s-m-l-9"></i>
                         </a>
                         <ul class="g-dropdown" style="width:90px">
                             <li>
-                                <a href="#" class="u-c-brand">LE EGP</a>
+                                <a href="#" class="u-c-brand">LE ₱</a>
                             </li>
                             <li>
                                 <a href="#">($) USD</a>
                             </li>
                         </ul>
                     </li>
+                    /- -->
                     <li>
-                        <a>ENG
-                        <i class="fas fa-chevron-down u-s-m-l-9"></i>
-                        </a>
-                        <ul class="g-dropdown" style="width:70px">
-                            <li>
-                                <a href="#" class="u-c-brand">ENG</a>
-                            </li>
-                            <li>
-                                <a href="#">ARB</a>
-                            </li>
-                        </ul>
+                        
+                    </li> 
                 </ul>
             </nav>
         </div>
     </div>
-    <!-- Top-Header /- -->
+    
     <!-- Mid-Header -->
     <div class="full-layer-mid-header">
         <div class="container">
@@ -139,7 +131,8 @@ $sections = \App\Models\Section::sections();
                         <a href="{{ url('/') }}">
 
 
-                            <img src="{{ asset('front/images/main-logo/main-logo.png') }}" alt="Multi-vendor E-commerce Application" class="app-brand-logo">
+                            <img src="{{ asset('front/images/main-logo/main-logo.png') }}" alt="PADABA Trading System" class="app-brand-logo" style="width: 80%;">
+
                         </a>
                     </div>
                 </div>
@@ -182,6 +175,7 @@ $sections = \App\Models\Section::sections();
                                 <i class="ion ion-md-home u-c-brand"></i>
                                 </a>
                             </li>
+
                             <li>
                                 <a id="mini-cart-trigger">
                                 <i class="ion ion-md-basket"></i>
@@ -285,15 +279,15 @@ $sections = \App\Models\Section::sections();
                 <div class="col-lg-9">
                     <ul class="bottom-nav g-nav u-d-none-lg">
                         <li>
-                            <a href="{{ url('search-products?search=new-arrivals') }}">New Arrivals 
+                            <a href="{{ url('search-products?search=new-arrivals') }}">New Products 
                             <span class="superscript-label-new">NEW</span>
                             </a>
                         </li>
-                        <li>
+                       <!-- <li>
                             <a href="{{ url('search-products?search=best-sellers') }}">Best Seller 
                             <span class="superscript-label-hot">HOT</span>
                             </a>
-                        </li>
+                        </li> 
                         <li>
                             <a href="{{ url('search-products?search=featured') }}">Featured 
                             </a>
@@ -302,47 +296,8 @@ $sections = \App\Models\Section::sections();
                             <a href="{{ url('search-products?search=discounted') }}">Discounted 
                             <span class="superscript-label-discount">>10%</span>
                             </a>
-                        </li>
-                        <li class="mega-position">
-                            <a>More
-                            <i class="fas fa-chevron-down u-s-m-l-9"></i>
-                            </a>
-                            <div class="mega-menu mega-3-colm">
-                                <ul>
-                                    <li class="menu-title">COMPANY</li>
-                                    <li>
-                                        <a href="{{ url('about-us') }}" class="u-c-brand">About Us</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('contact') }}">Contact Us</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('faq') }}">FAQ</a>
-                                    </li>
-                                </ul>
-                                <ul>
-                                    <li class="menu-title">COLLECTION</li>
-                                    <li>
-                                        <a href="{{ url('men') }}">Men Clothing</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('women') }}">Women Clothing</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('kids') }}">Kids Clothing</a>
-                                    </li>
-                                </ul>
-                                <ul>
-                                    <li class="menu-title">ACCOUNT</li>
-                                    <li>
-                                        <a href="{{ url('user/account') }}">My Account</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('user/orders') }}">My Orders</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+                        </li>-->
+                        
                     </ul>
                 </div>
             </div>

@@ -155,7 +155,7 @@ class ProductsController extends Controller
                     // We fill in the $categoryDetails array MANUALLY with the same indexes/keys that come from the categoryDetails() method in Category.php model (because in either cases of the if-else statement, we pass in $categoryDetails variable to the view down below)
                     $categoryDetails['breadcrumbs']                      = 'New Arrival Products';
                     $categoryDetails['categoryDetails']['category_name'] = 'New Arrival Products';
-                    $categoryDetails['categoryDetails']['description']   = 'New Arrival Products';
+                    $categoryDetails['categoryDetails']['description']   = '';
 
                     // We join `products` table (at the `category_id` column) with `categoreis` table (becausee we're going to search `category_name` column in `categories` table)
                     // Note: It's best practice to name table columns with more verbose descriptive names (e.g. if the table name is `products`, then you should have a column called `product_id`, NOT `id`), and also, don't have repeated column names THROUGHOUT/ACROSS the tables of a certain (one) database (i.e. make all your database tables column names (throughout your database) UNIQUE (even columns in different tables!)). That's because of that problem that emerges when you join (JOIN clause) two tables which have the same column names, when you join them, the column names of the second table overrides the column names of the first table (similar column names override each other), leading to many problems. There are TWO ways/workarounds to tackle this problem
@@ -501,7 +501,7 @@ class ProductsController extends Controller
             $getProductStock = ProductsAttribute::getProductStock($data['product_id'], $data['size']);
 
             if ($getProductStock < $data['quantity']) { // if the `stock` available (in `products_attributes` table) is less than the ordered quantity by user (the quantity that the user desires)
-                return redirect()->back()->with('error_message', 'Required Quantity is not available!');
+                return redirect()->back()->with('error_message', 'Cannot add more than the available stocks!');
             }
 
 
@@ -571,7 +571,7 @@ class ProductsController extends Controller
         $getCartItems = Cart::getCartItems();
 
         // Static SEO (HTML meta tags): Check the HTML <meta> tags and <title> tag in front/layout/layout.blade.php    
-        $meta_title       = 'Shopping Cart - Multi Vendor E-commerce';
+        $meta_title       = 'Shopping Cart - PADABA Trading System';
         $meta_keywords    = 'shopping cart, multi vendor';
 
 
@@ -996,7 +996,7 @@ class ProductsController extends Controller
                 $order_status   = 'New';
 
             } else { // if the user selects any `payment_gateway` other than 'COD', this means that the `payment_method` is 'prepaid'  (and `order_status` is 'pending')
-                $payment_method = 'Prepaid';
+                $payment_method = 'Pick-Up';
                 $order_status   = 'Pending'; // And after payment confirmation, `order_status` becomes 'Payment Captured'. (We'll create the API that will convert this to either 'Payment Captured' or 'Canceled')
             }
 
@@ -1138,13 +1138,13 @@ class ProductsController extends Controller
                 ];
 
                 \Illuminate\Support\Facades\Mail::send('emails.order', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order' is the order.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Placed - MultiVendorEcommerceApplication.com.eg');
+                    $message->to($email)->subject('Order Placed');
                 });
 
                 /*
                 // Sending the Order confirmation SMS
                 // Send an SMS using an SMS API and cURL    
-                $message = 'Dear Customer, your order ' . $order_id . ' has been placed successfully with MultiVendorEcommerceApplication.com.eg. We will inform you once your order is shipped';
+                $message = 'Dear Customer, your order ' . $order_id . ' has been placed successfully with PADABA. We will inform you once your order is shipped';
                 // $mobile = $data['mobile']; // the user's mobile that they entered while submitting the registration form
                 $mobile = Auth::user()->moblie; // Retrieving The Authenticated User: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
                 \App\Models\Sms::sendSms($message, $mobile); // Send the SMS
