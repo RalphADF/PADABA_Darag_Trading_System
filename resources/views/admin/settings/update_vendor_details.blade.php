@@ -235,7 +235,7 @@
                                             </head>
                                             <body>
 
-                                                <h2>Select Your Location</h2>
+                                                {{-- <h2>Select Your Location</h2>
 
                                                 <div id="map"></div>
 
@@ -310,7 +310,83 @@
                                                 <!-- Load Google Maps JavaScript API asynchronously with defer -->
                                                 <script async defer 
                                                         src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.javascript_api_key') }}&callback=initMap">
-                                                </script>
+                                                </script> --}}
+
+                                                <!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet/dist/leaflet.css"
+/>
+
+<h2>Select Your Location</h2>
+<div id="map" style="height: 400px; width: 100%;"></div>
+
+<!-- Hidden fields to hold the coords (could also be actual <input type="hidden">) -->
+<p style="display: none;"><span id="lat"></span></p>
+<p style="display: none;"><span id="lng"></span></p>
+
+<!-- Your existing form fields -->
+<input type="hidden" id="shop_pincode" name="shop_pincode">
+<input type="hidden" id="shop_state"  name="shop_state">
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initial center (can be dynamic or Blade-templated)
+    const initialLat = 10.7201;
+    const initialLng = 122.5533;
+
+    // 1) Initialize map
+    const map = L.map('map').setView([ initialLat, initialLng ], 15);
+
+    // 2) Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // 3) Add a draggable marker
+    const marker = L.marker([ initialLat, initialLng ], { draggable: true }).addTo(map);
+
+    // 4) When marker drag ends, update fields
+    marker.on('dragend', () => {
+      const { lat, lng } = marker.getLatLng();
+      updateLocationFields(lat, lng);
+    });
+
+    // 5) When map is clicked, move marker & update
+    map.on('click', (e) => {
+      const { lat, lng } = e.latlng;
+      marker.setLatLng([ lat, lng ]);
+      updateLocationFields(lat, lng);
+    });
+
+    // Initial update
+    updateLocationFields(initialLat, initialLng);
+
+    // 6) Set the hidden inputs and reverse‐geocode via Nominatim
+    function updateLocationFields(lat, lng) {
+      // update spans (if you need them)
+      document.getElementById('lat').textContent = lat;
+      document.getElementById('lng').textContent = lng;
+
+      // update form inputs
+      document.getElementById('shop_pincode').value = lat;
+      document.getElementById('shop_state').value  = lng;
+
+      // reverse‐geocode
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.display_name) {
+            document.getElementById('shop_address').value = data.display_name;
+          }
+        })
+        .catch(err => console.error('Reverse geocoding failed:', err));
+    }
+  });
+</script>
+
 
                                             </body>
                                             </html>

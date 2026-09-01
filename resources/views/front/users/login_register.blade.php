@@ -9,11 +9,11 @@
             <div class="page-intro">
                 <h2>Account</h2>
                 <ul class="bread-crumb">
-                    <li class="has-separator">
+                    <li style="color: black;" class="has-separator">
                         <i class="ion ion-md-home"></i>
                         <a href="index.html">Home</a>
                     </li>
-                    <li class="is-marked">
+                    <li style="color: black;" class="is-marked">
                         <a href="account.html">Account</a>
                     </li>
                 </ul>
@@ -64,8 +64,8 @@
                 <!-- Login -->
                 <div class="col-lg-6">
                     <div class="login-wrapper">
-                        <h2 class="account-h2 u-s-m-b-20"style="color:black;">Login</h2>
-                        <h6 class="account-h6 u-s-m-b-30">Welcome back! Sign in to your account.</h6>
+                        <h2 class="account-h2 u-s-m-b-20"style="color:black;">Customer Login</h2>
+                        <h6 style="font-weight: bold; color: black;" class="account-h6 u-s-m-b-30">Welcome back! Sign in to your account.</h6>
 
 
                         
@@ -127,8 +127,8 @@
                 <!-- Register -->
                 <div class="col-lg-6">
                     <div class="reg-wrapper">
-                        <h2 class="account-h2 u-s-m-b-20" style="color:black;">Register</h2>
-                        <h6 class="account-h6 u-s-m-b-30">Registering for this site allows you to access your order status and history.</h6>
+                        <h2 class="account-h2 u-s-m-b-20" style="color:black;">Customer Register</h2>
+                        <h6 style="font-weight: bold; color: black;" class="account-h6 u-s-m-b-30">Registering for this site allows you to access your order status and history.</h6>
 
 
 
@@ -191,122 +191,104 @@
                                 {{-- <p id="register-password" style="color: red"></p> --}} {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                                 <p id="register-password"></p> {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                             </div>
-                            <div class="u-s-m-b-30"> {{-- "I've read and accept the terms & conditions" Checkbox --}}
+                            <!-- Terms & Conditions Checkbox -->
+                            <div class="u-s-m-b-30">
                                 <input type="checkbox" class="check-box" id="accept" name="accept">
-                                <label class="label-text no-color" for="accept">I’ve read and accept the
-                                <a href="#" class="u-c-brand" onclick="openPopup()">terms & conditions</a>
+                                <label class="label-text no-color" for="accept">
+                                    I’ve read and accept the
+                                    <a href="#" class="u-c-brand" data-bs-toggle="modal" data-bs-target="#termsModal">terms & conditions</a>
                                 </label>
                             </div>
-                            <script>
-                            function openPopup() {
-                                const popup = window.open("", "Terms and Conditions", "width=800,height=600,resizable=yes,scrollbars=yes");
-                                popup.document.write(`
-                                    <!DOCTYPE html>
-                                    <html>
-                                    <head>
-                                        <title>Terms and Conditions for Customer Registration</title>
-                                        <style>
-                                            body {
-                                                font-family: Arial, sans-serif;
-                                                padding: 20px;
-                                                line-height: 1.6;
-                                            }
-                                            h1, h2 {
-                                                color: #333;
-                                            }
-                                            p, li {
-                                                margin-bottom: 10px;
-                                            }
-                                            ul {
-                                                padding-left: 20px;
-                                            }
-                                            hr {
-                                                border: none;
-                                                border-top: 1px solid #ddd;
-                                                margin: 20px 0;
-                                            }
-                                        </style>
-                                    </head>
-                                    <body>
-                                        <h1>Terms and Conditions for Customer Registration</h1>
-                                        
-                                        <p>Welcome to PADABA Trading System. By registering as a customer on our platform, you agree to abide by the following terms and conditions. Please read them carefully before completing your registration.</p>
 
-                                        <hr>
+                            <!-- Terms & Conditions Modal -->
+                            <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="termsModalLabel" style="font-weight: bold; color: black;">Terms and Conditions for Customer Registration</h5>
+                                        </div>
+                                        <div class="modal-body" style="max-height: 400px; overflow-y: auto; color: black;">
+                                            <p>Welcome to PADABA Trading System. By registering as a customer on our platform, you agree to abide by the following terms and conditions. Please read them carefully before completing your registration.</p>
 
-                                        <h2>1. Eligibility</h2>
-                                        <ul>
-                                            <li>1.1 You must be at least 18 years old to register as a customer.</li>
-                                            <li>1.2 You agree to provide accurate, complete, and up-to-date information during registration.</li>
-                                        </ul>
+                                            <hr>
 
-                                        <h2>2. Account Responsibilities</h2>
-                                        <ul>
-                                            <li>2.1 You are responsible for maintaining the confidentiality of your account credentials.</li>
-                                            <li>2.2 Any activity conducted through your account will be considered your responsibility. Notify us immediately of any unauthorized access.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">1. Eligibility</h6>
+                                            <ul>
+                                                <li style="color: black;">You must be at least 18 years old to register as a customer.</li>
+                                                <li style="color: black;">You agree to provide accurate, complete, and up-to-date information during registration.</li>
+                                            </ul>
 
-                                        <h2>3. Product Purchases</h2>
-                                        <ul>
-                                            <li>3.1 You agree to review product descriptions carefully before making any purchase.</li>
-                                            <li>3.2 You are responsible for providing accurate delivery information for the successful fulfillment of your order.</li>
-                                            <li>3.3 All purchases must comply with applicable laws and regulations.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">2. Account Responsibilities</h6>
+                                            <ul>
+                                                <li style="color: black;">You are responsible for maintaining the confidentiality of your account credentials.</li>
+                                                <li style="color: black;">Any activity conducted through your account will be considered your responsibility. Notify us immediately of any unauthorized access.</li>
+                                            </ul>
 
-                                        <h2>4. Payments and Fees</h2>
-                                        <ul>
-                                            <li>4.1 You agree to pay for all items purchased in accordance with the pricing outlined on the platform.</li>
-                                            <li>4.2 Payments will be processed according to the payment method selected during checkout.</li>
-                                            <li>4.3 Any applicable taxes, fees, or additional charges will be added to the total purchase price.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">3. Product Purchases</h6>
+                                            <ul>
+                                                <li style="color: black;">You agree to review product descriptions carefully before making any purchase.</li>
+                                                <li style="color: black;">You are responsible for providing accurate delivery information for the successful fulfillment of your order.</li>
+                                                <li style="color: black;">All purchases must comply with applicable laws and regulations.</li>
+                                            </ul>
 
-                                        <h2>5. Order Fulfillment and Returns</h2>
-                                        <ul>
-                                            <li>5.1 PADABA Trading System strives to ensure timely order fulfillment, but we are not responsible for delays caused by third parties or circumstances beyond our control.</li>
-                                            <li>5.2 Our return and refund policies must be followed for any order returns or disputes.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">4. Payments and Fees</h6>
+                                            <ul>
+                                                <li style="color: black;">You agree to pay for all items purchased in accordance with the pricing outlined on the platform.</li>
+                                                <li style="color: black;">Payments will be processed according to the payment method selected during checkout.</li>
+                                                <li style="color: black;">Any applicable taxes, fees, or additional charges will be added to the total purchase price.</li>
+                                            </ul>
 
-                                        <h2>6. Prohibited Activities</h2>
-                                        <ul>
-                                            <li>6.1 Customers must not engage in fraudulent activities, including the use of false information or unauthorized payment methods.</li>
-                                            <li>6.2 Any violation of these terms may result in account suspension or termination.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">5. Order Fulfillment and Returns</h6>
+                                            <ul>
+                                                <li style="color: black;">PADABA Trading System strives to ensure timely order fulfillment, but we are not responsible for delays caused by third parties or circumstances beyond our control.</li>
+                                                <li style="color: black;">Our return and refund policies must be followed for any order returns or disputes.</li>
+                                            </ul>
 
-                                        <h2>7. Intellectual Property</h2>
-                                        <ul>
-                                            <li>7.1 You acknowledge that all trademarks, logos, and other intellectual property associated with the products listed on the platform are owned by their respective entities.</li>
-                                            <li>7.2 You agree not to infringe on the intellectual property rights of PADABA Trading System or third-party entities.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">6. Prohibited Activities</h6>
+                                            <ul>
+                                                <li style="color: black;">Customers must not engage in fraudulent activities, including the use of false information or unauthorized payment methods.</li>
+                                                <li style="color: black;">Any violation of these terms may result in account suspension or termination.</li>
+                                            </ul>
 
-                                        <h2>8. Termination</h2>
-                                        <ul>
-                                            <li>8.1 We reserve the right to terminate your customer account at any time for breaches of these terms or other violations of our policies.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">7. Intellectual Property</h6>
+                                            <ul>
+                                                <li style="color: black;">You acknowledge that all trademarks, logos, and other intellectual property associated with the products listed on the platform are owned by their respective entities.</li>
+                                                <li style="color: black;">You agree not to infringe on the intellectual property rights of PADABA Trading System or third-party entities.</li>
+                                            </ul>
 
-                                        <h2>9. Liability and Indemnification</h2>
-                                        <ul>
-                                            <li>9.1 PADABA Trading System is not liable for any disputes arising between customers and breeders or third parties.</li>
-                                            <li>9.2 You agree to indemnify and hold harmless PADABA Trading System from any claims or damages arising from your use of the platform.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">8. Termination</h6>
+                                            <ul>
+                                                <li style="color: black;">We reserve the right to terminate your customer account at any time for breaches of these terms or other violations of our policies.</li>
+                                            </ul>
 
-                                        <h2>10. Amendments</h2>
-                                        <ul>
-                                            <li>10.1 We reserve the right to amend these terms and conditions at any time. Continued use of the platform constitutes your acceptance of any changes.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">9. Liability and Indemnification</h6>
+                                            <ul>
+                                                <li style="color: black;">PADABA Trading System is not liable for any disputes arising between customers and breeders or third parties.</li>
+                                                <li style="color: black;">You agree to indemnify and hold harmless PADABA Trading System from any claims or damages arising from your use of the platform.</li>
+                                            </ul>
 
-                                        <h2>11. Governing Law</h2>
-                                        <ul>
-                                            <li>11.1 These terms and conditions are governed by the laws of the Philippines.</li>
-                                        </ul>
+                                            <h6 style="font-weight: bold; color: black;">10. Amendments</h6>
+                                            <ul>
+                                                <li style="color: black;">We reserve the right to amend these terms and conditions at any time. Continued use of the platform constitutes your acceptance of any changes.</li>
+                                            </ul>
 
-                                        <p>By clicking "Register," you confirm that you have read, understood, and agree to these terms and conditions.</p>
-                                    </body>
-                                    </html>
-                                `);
-                                popup.document.close();
-                            }
+                                            <h6 style="font-weight: bold; color: black;">11. Governing Law</h6>
+                                            <ul>
+                                                <li style="color: black;">These terms and conditions are governed by the laws of the Philippines.</li>
+                                            </ul>
 
-                            </script>
+                                            <p>By clicking "Register," you confirm that you have read, understood, and agree to these terms and conditions.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="color: white;"><i class="bi bi-x-square-fill"></i> Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap JS (Required for Modal) -->
+                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
                             <div class="u-s-m-b-45">
                                 <button class="button button-primary w-100">Register</button>

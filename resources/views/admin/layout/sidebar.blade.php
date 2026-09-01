@@ -156,7 +156,7 @@
                     <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #6f7d5f !important">
                         <li class="nav-item"> <a @if (Session::get('page') == 'sections')   style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/sections') }}">Sections</a></li>
                         <li class="nav-item"> <a @if (Session::get('page') == 'categories') style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/categories') }}">Categories</a></li>
-                        <li class="nav-item"> <a @if (Session::get('page') == 'brands')     style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/brands') }}">Brands</a></li> 
+                        <li class="nav-item"> <a @if (Session::get('page') == 'brands')     style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/brands') }}">Food Type</a></li> 
                         <li class="nav-item"> <a @if (Session::get('page') == 'products')   style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/products') }}">Products</a></li>
                         <li class="nav-item"> <a @if (Session::get('page') == 'coupons')    style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/coupons') }}">Coupons</a></li>
                         <li class="nav-item"> <a @if (Session::get('page') == 'filters')    style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/filters') }}">Filters</a></li>
@@ -203,7 +203,6 @@
                 <div class="collapse" id="ui-users">
                     <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #6f7d5f !important">
                         <li class="nav-item"> <a @if (Session::get('page') == 'users')       style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/users') }}">Users</a></li>
-                        <li class="nav-item"> <a @if (Session::get('page') == 'subscribers') style="background: #6f7d5f !important; color: #FFF !important" @else style="background: #fff !important; color: #6f7d5f !important" @endif class="nav-link" href="{{ url('admin/subscribers') }}">Subscribers</a></li>
                     </ul>
                 </div>
             </li>

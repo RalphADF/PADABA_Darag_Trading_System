@@ -251,14 +251,14 @@
                                     </select><br>
 
                                     {{-- Delivery Schedule --}}
-                                    <label for="delivery_schedule">Set Delivery Schedule:</label>
+                                    <label id="delivery_schedule_label" for="delivery_schedule">Set Delivery Schedule:</label>
                                     <input style="width: 140px" type="date" name="delivery_schedule"
                                         id="delivery_schedule" min="{{ \Carbon\Carbon::tomorrow()->format('Y-m-d') }}"
                                         value="{{ !empty($orderDetails['delivery_schedule']) ? \Carbon\Carbon::parse($orderDetails['delivery_schedule'])->format('Y-m-d') : '' }}">
                                     <br>
 
                                     {{-- Courier Name --}}
-                                    <label for="courier_name">Select Courier:</label>
+                                    <label id="courier_name_label" for="courier_name">Select Courier:</label>
                                     <select name="courier_name" id="courier_name">
                                         <option value="">Select Courier</option>
                                         @foreach (\App\Models\Admin::where('type', 'subadmin')->get() as $subadmin)
@@ -302,7 +302,8 @@
 
                                     {{-- Note: There are two types of Shipping Process: "manual" and "automatic". "Manual" is in the case like small businesses, where the courier arrives at the owner warehouse to to pick up the order for shipping, and the small business owner takes the shipment details (like courier name, tracking number, ...) from the courier, and inserts those details themselves in the Admin Panel when they "Update Order Status" Section (by an 'admin') or "Update Item Status" Section (by a 'vendor' or 'admin') (in admin/orders/order_details.blade.php). With "automatic" shipping process, we're integrating third-party APIs and orders go directly to the shipping partner, and the updates comes from the courier's end, and orders are automatically delivered to customers --}}
 
-                                    {{-- Show if the order status previewed in "Update Order Status" Section in admin/orders/order_details.blade.php is whether updated from "Update Item Status" Section (which can updated by either `vendor`-s or `admin`-s) (in case the `order_item_id` column is NOT zero 0 (it is 0 zero in case of updated by `admin`-s only in the "Update Order Status" Section)) or from "Update Order Status" Section (can be updated by `admin`-s ONLY). Check updateOrderItemStatus() method in Admin/OrderController.php     --}}
+                                    {{-- Show if the order status previewed in "Update Order Status" Section in admin/orders/order_details.blade.php is whether updated from "Update Item Status" Section (which can updated by either `vendor`-s or `admin`-s) (in case the `order_item_id` column is NOT zero 0 (it is 0 zero in case of updated by `admin`-s only in the "Update Order Status" Section)) or from "Update Order Status" Section (can be updated by `admin`-s ONLY). Check updateOrderItemStatus() method in Admin/OrderController.php --}}
+                                    
                                     @if (isset($log['order_item_id']) && $log['order_item_id'] > 0)
                                         {{-- In case the "Item Status" Section is updated by a 'vendor' or 'admin', the `order_item_id` column in `orders_logs` table references (is a foreign key to) the `id` column in `orders_products` table, otherwise, it takes 0 zero as a value (in case of 'admin'). Check updateOrderItemStatus() method in Admin/OrderController.php --}}
                                         @php
@@ -498,7 +499,7 @@
 
 
                             <br>
-                            {{-- Route Map Container --}}
+                            {{-- Route Map Container
                             <h4 class="card-title">Route Map</h4>
                             @if (Auth::guard('admin')->user()->type != 'vendor')
                                 <div id="map" style="height: 300px; width: 100%;"></div>
@@ -649,19 +650,147 @@
                                 </div>
                             @else
                                 This feature is only for delivery personnel.
-                            @endif
+                            @endif --}}
 
+                            <!-- Leaflet CSS -->
+                            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                            <!-- Leaflet JS -->
+                            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                            <!-- OpenRouteService -->
+                            <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+                            <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+                            <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 
-                        </div>
+                            <h4 class="card-title">Route Map</h4>
+                            <div id="map" style="height: 300px; width: 100%;"></div>
+                            <div id="route-distance" style="margin-top: 10px; font-size: 16px; font-weight: bold;"></div>
 
-                    </div>
+                            <script>
+                                let map = L.map('map').setView([0, 0], 13);
 
-                </div>
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    maxZoom: 19,
+                                    attribution: '&copy; OpenStreetMap contributors'
+                                }).addTo(map);
 
-            </div>
+                                const coordinates = [];
+                                const labels      = [];
 
+                                if (navigator.geolocation) {
+                                    navigator.geolocation.getCurrentPosition(position => {
+                                        // 1. Live location
+                                        coordinates.push([position.coords.latitude, position.coords.longitude]);
+                                        labels.push("Your Location");
 
-        </div>
+                                        // 2. Vendor locations
+                                        @foreach ($orderDetails['orders_products'] as $product)
+                                            @foreach ($vendors as $vendor)
+                                                @if (isset($vendor['vendor_business']['vendor_id']) && $product['vendor_id'] === $vendor['vendor_business']['vendor_id'])
+                                                    coordinates.push([
+                                                        parseFloat("{{ $vendor['vendor_business']['shop_pincode'] }}"),
+                                                        parseFloat("{{ $vendor['vendor_business']['shop_state'] }}")
+                                                    ]);
+                                                    labels.push("{{ addslashes($vendor['vendor_business']['shop_name'] ?? 'Vendor') }}");
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+
+                                        // 3. Recipient location
+                                        coordinates.push([
+                                            parseFloat("{{ $orderDetails['state'] }}"),
+                                            parseFloat("{{ $orderDetails['city'] }}")
+                                        ]);
+                                        labels.push("Recipient");
+
+                                        drawRoute();
+                                    }, () => {
+                                        alert("Failed to get live location.");
+                                    });
+                                } else {
+                                    alert("Geolocation not supported.");
+                                }
+
+                                function drawRoute() {
+                                    if (coordinates.length < 2) return;
+
+                                    map.setView(coordinates[0], 12);
+
+                                    const icons = {
+                                        user: L.divIcon({
+                                            className: '',
+                                            html: `
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007BFF" class="size-6">
+                                                <path d="M3.375 4.5C2.339 4.5 1.5 5.34 1.5 6.375V13.5h12V6.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM13.5 15h-12v2.625c0 1.035.84 1.875 1.875 1.875h.375a3 3 0 1 1 6 0h3a.75.75 0 0 0 .75-.75V15Z" />
+                                                <path d="M8.25 19.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0ZM15.75 6.75a.75.75 0 0 0-.75.75v11.25c0 .087.015.17.042.248a3 3 0 0 1 5.958.464c.853-.175 1.522-.935 1.464-1.883a18.659 18.659 0 0 0-3.732-10.104 1.837 1.837 0 0 0-1.47-.725H15.75Z" />
+                                                <path d="M19.5 19.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                                                </svg>
+                                                `,
+                                            iconSize: [30, 40],
+                                            iconAnchor: [15, 40]
+                                        }),
+                                        vendor: L.divIcon({
+                                            className: '',
+                                            html: `
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#28a745" class="size-6">
+                                                <path d="M5.223 2.25c-.497 0-.974.198-1.325.55l-1.3 1.298A3.75 3.75 0 0 0 7.5 9.75c.627.47 1.406.75 2.25.75.844 0 1.624-.28 2.25-.75.626.47 1.406.75 2.25.75.844 0 1.623-.28 2.25-.75a3.75 3.75 0 0 0 4.902-5.652l-1.3-1.299a1.875 1.875 0 0 0-1.325-.549H5.223Z" />
+                                                <path fill-rule="evenodd" d="M3 20.25v-8.755c1.42.674 3.08.673 4.5 0A5.234 5.234 0 0 0 9.75 12c.804 0 1.568-.182 2.25-.506a5.234 5.234 0 0 0 2.25.506c.804 0 1.567-.182 2.25-.506 1.42.674 3.08.675 4.5.001v8.755h.75a.75.75 0 0 1 0 1.5H2.25a.75.75 0 0 1 0-1.5H3Zm3-6a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75v-3Zm8.25-.75a.75.75 0 0 0-.75.75v5.25c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-5.25a.75.75 0 0 0-.75-.75h-3Z" clip-rule="evenodd" />
+                                                </svg>
+                                                `,
+                                            iconSize: [30, 40],
+                                            iconAnchor: [15, 40]
+                                        }),
+                                        recipient: L.divIcon({
+                                            className: '',
+                                            html: `
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#dc3545" class="size-6">
+                                                <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                                                <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+                                                </svg>
+                                                    `,
+                                            iconSize: [30, 40],
+                                            iconAnchor: [15, 40]
+                                        })
+                                    };
+
+                                    L.Routing.control({
+                                        waypoints: coordinates.map(c => L.latLng(c[0], c[1])),
+                                        router: L.Routing.osrmv1({
+                                            serviceUrl: 'https://router.project-osrm.org/route/v1'
+                                        }),
+                                        show: false,
+                                        addWaypoints: false,
+                                        routeWhileDragging: false,
+
+                                createMarker: function(i, wp, nWps) {
+                                    let icon;
+
+                                    if (i === 0) {
+                                        icon = icons.user;
+                                    } else if (i === coordinates.length - 1) {
+                                        icon = icons.recipient;
+                                    } else {
+                                        icon = icons.vendor;
+                                    }
+
+                                    return L.marker(wp.latLng, { icon: icon })
+                                        .bindTooltip(labels[i], {
+                                            permanent: true,
+                                            direction: 'top',
+                                            offset: [0, -45]  // <-- Label placed above the icon
+                                        })
+                                        .openTooltip();
+                                }
+
+                                    })
+                                    .on('routesfound', function (e) {
+                                        let distance = e.routes[0].summary.totalDistance / 1000;
+                                        document.getElementById("route-distance").innerText = `Total Distance: ${distance.toFixed(2)} km`;
+                                    })
+                                    .addTo(map);
+                                }
+
+                            </script>
+</div>
         <!-- content-wrapper ends -->
 
         {{-- Footer --}}

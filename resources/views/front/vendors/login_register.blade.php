@@ -3,6 +3,7 @@
 
 
 @section('content')
+
     <!-- Page Introduction Wrapper -->
     <div class="page-style-a">
         <div class="container">
@@ -64,7 +65,7 @@
                 <!-- Login -->
                 <div class="col-lg-6">
                     <div class="login-wrapper">
-                        <h2 class="account-h2 u-s-m-b-20" style="color: black">Login</h2>
+                        <h2 class="account-h2 u-s-m-b-20" style="color: black">Darag Breeder Login</h2>
                         <h6 class="account-h6 u-s-m-b-30">Welcome back! Sign in to your account.</h6>
 
 
@@ -95,7 +96,7 @@
                 <!-- Register -->
                 <div class="col-lg-6">
                     <div class="reg-wrapper">
-                        <h2 class="account-h2 u-s-m-b-20" style="color: black">Breeder Registration</h2>
+                        <h2 class="account-h2 u-s-m-b-20" style="color: black">Darag Breeder Registration</h2>
                         <h6 class="account-h6 u-s-m-b-30">Registering for this site allows you to access your order status and history.</h6>
 
 
@@ -170,122 +171,116 @@
                             </script>
 
 
-                            <div class="u-s-m-b-30"> {{-- "I've read and accept the terms & conditions" Checkbox --}}
+                            <!-- Terms & Conditions Checkbox -->
+                            <div class="u-s-m-b-30">
                                 <input type="checkbox" class="check-box" id="accept" name="accept">
-                                <label class="label-text no-color" for="accept">I’ve read and accept the
-                                <a href="#" class="u-c-brand" onclick="openPopup()">terms & conditions</a>
+                                <label class="label-text no-color" for="accept">
+                                    I’ve read and accept the
+                                    <a href="#" class="u-c-brand" data-bs-toggle="modal" data-bs-target="#termsModal">terms & conditions</a>
                                 </label>
                             </div>
-                            <script>
-                            function openPopup() {
-                                const popup = window.open("", "Terms and Conditions", "width=800,height=600,resizable=yes,scrollbars=yes");
-                                popup.document.write(`
-                                    <!DOCTYPE html>
-                                    <html>
-                                    <head>
-                                        <title>Terms and Conditions for Breeder Registration</title>
-                                        <style>
-                                            body {
-                                                font-family: Arial, sans-serif;
-                                                padding: 20px;
-                                                line-height: 1.6;
-                                            }
-                                            h1, h2 {
-                                                color: #333;
-                                            }
-                                            p, li {
-                                                margin-bottom: 10px;
-                                            }
-                                            ul {
-                                                padding-left: 20px;
-                                            }
-                                            hr {
-                                                border: none;
-                                                border-top: 1px solid #ddd;
-                                                margin: 20px 0;
-                                            }
-                                        </style>
-                                    </head>
-                                    <body>
-                                        <h1>Terms and Conditions for Breeder Registration</h1>
-                                        
-                                        <p>Welcome to PADABA Trading System. By registering as a breeder on our platform, you agree to abide by the following terms and conditions. Please read them carefully before completing your registration.</p>
 
-                                        <hr>
+                            <!-- Terms & Conditions Modal -->
+                            <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="termsModalLabel" >Terms and Conditions for Breeder Registration</h5>                                          
+                                        </div>
+                                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                                            <style>
+                                                h6, h5, p, a {
+                                                    color: black !important;
+                                                    font-weight: bold;
+                                                }
 
-                                        <h2>1. Eligibility</h2>
-                                        <ul>
-                                            <li>1.1 You must be at least 18 years old to register as a breeder.</li>
-                                            <li>1.2 You agree to provide accurate, complete, and up-to-date information during registration.</li>
-                                        </ul>
+                                                li {
+                                                    color: black;
+                                                }
+                                            </style>
 
-                                        <h2>2. Account Responsibilities</h2>
-                                        <ul>
-                                            <li>2.1 You are responsible for maintaining the confidentiality of your account credentials.</li>
-                                            <li>2.2 Any activity conducted through your account will be considered your responsibility. Notify us immediately of unauthorized access.</li>
-                                        </ul>
+                                            <p>Welcome to PADABA Trading System. By registering as a breeder on our platform, you agree to abide by the following terms and conditions. Please read them carefully before completing your registration.</p>
 
-                                        <h2>3. Product Listings</h2>
-                                        <ul>
-                                            <li>3.1 All products listed must comply with local laws and regulations. Prohibited or illegal items are strictly forbidden.</li>
-                                            <li>3.2 Product descriptions must be accurate and not misleading.</li>
-                                        </ul>
+                                            <hr>
 
-                                        <h2>4. Payments and Fees</h2>
-                                        <ul>
-                                            <li>4.1 You agree to pay any applicable fees for listing or transactions as per our fee structure.</li>
-                                            <li>4.2 Payments for orders will be disbursed after successful order fulfillment, subject to our payment schedule.</li>
-                                        </ul>
+                                            <h6>1. Eligibility</h6>
+                                            <ul>
+                                                <li>You must be at least 18 years old to register as a breeder.</li>
+                                                <li>You agree to provide accurate, complete, and up-to-date information during registration.</li>
+                                            </ul>
 
-                                        <h2>5. Order Fulfillment and Returns</h2>
-                                        <ul>
-                                            <li>5.1 Breeders are responsible for timely order processing and shipping.</li>
-                                            <li>5.2 Breeders must comply with our return and refund policies to ensure customer satisfaction.</li>
-                                        </ul>
+                                            <h6>2. Account Responsibilities</h6>
+                                            <ul>
+                                                <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
+                                                <li>Any activity conducted through your account will be considered your responsibility. Notify us immediately of unauthorized access.</li>
+                                            </ul>
 
-                                        <h2>6. Prohibited Activities</h2>
-                                        <ul>
-                                            <li>6.1 Breeders must not engage in fraudulent activities, including false advertising, counterfeit products, or manipulation of reviews.</li>
-                                            <li>6.2 Any violation of these terms may result in account suspension or termination.</li>
-                                        </ul>
+                                            <h6>3. Product Listings</h6>
+                                            <ul>
+                                                <li>All products listed must comply with local laws and regulations. Prohibited or illegal items are strictly forbidden.</li>
+                                                <li>Product descriptions must be accurate and not misleading.</li>
+                                            </ul>
 
-                                        <h2>7. Intellectual Property</h2>
-                                        <ul>
-                                            <li>7.1 Breeders warrant that they own or have the right to use any trademarks, logos, or copyrighted material associated with their products.</li>
-                                        </ul>
+                                            <h6>4. Payments and Fees</h6>
+                                            <ul>
+                                                <li>You agree to pay any applicable fees for listing or transactions as per our fee structure.</li>
+                                                <li>Payments for orders will be disbursed after successful order fulfillment, subject to our payment schedule.</li>
+                                            </ul>
 
-                                        <h2>8. Termination</h2>
-                                        <ul>
-                                            <li>8.1 We reserve the right to terminate your breeder account at any time for breaches of these terms or other violations of our policies.</li>
-                                        </ul>
+                                            <h6>5. Order Fulfillment and Returns</h6>
+                                            <ul>
+                                                <li>Breeders are responsible for timely order processing and shipping.</li>
+                                                <li>Breeders must comply with our return and refund policies to ensure customer satisfaction.</li>
+                                            </ul>
 
-                                        <h2>9. Liability and Indemnification</h2>
-                                        <ul>
-                                            <li>9.1 PADABA Trading System is not liable for any disputes arising between breeders and customers.</li>
-                                            <li>9.2 You agree to indemnify and hold harmless PADABA Trading System from any claims or damages arising from your use of the platform.</li>
-                                        </ul>
+                                            <h6>6. Prohibited Activities</h6>
+                                            <ul>
+                                                <li>Breeders must not engage in fraudulent activities, including false advertising, counterfeit products, or manipulation of reviews.</li>
+                                                <li>Any violation of these terms may result in account suspension or termination.</li>
+                                            </ul>
 
-                                        <h2>10. Amendments</h2>
-                                        <ul>
-                                            <li>10.1 We reserve the right to amend these terms and conditions at any time. Continued use of the platform constitutes your acceptance of any changes.</li>
-                                        </ul>
+                                            <h6>7. Intellectual Property</h6>
+                                            <ul>
+                                                <li>Breeders warrant that they own or have the right to use any trademarks, logos, or copyrighted material associated with their products.</li>
+                                            </ul>
 
-                                        <h2>11. Governing Law</h2>
-                                        <ul>
-                                            <li>11.1 These terms and conditions are governed by the laws of Philippines.</li>
-                                        </ul>
+                                            <h6>8. Termination</h6>
+                                            <ul>
+                                                <li>We reserve the right to terminate your breeder account at any time for breaches of these terms or other violations of our policies.</li>
+                                            </ul>
 
-                                        <p>By clicking "Register," you confirm that you have read, understood, and agree to these terms and conditions.</p>
-                                    </body>
-                                    </html>
-                                `);
-                                popup.document.close();
-                            }
-                            </script>
+                                            <h6>9. Liability and Indemnification</h6>
+                                            <ul>
+                                                <li>PADABA Trading System is not liable for any disputes arising between breeders and customers.</li>
+                                                <li>You agree to indemnify and hold harmless PADABA Trading System from any claims or damages arising from your use of the platform.</li>
+                                            </ul>
+
+                                            <h6>10. Amendments</h6>
+                                            <ul>
+                                                <li>We reserve the right to amend these terms and conditions at any time. Continued use of the platform constitutes your acceptance of any changes.</li>
+                                            </ul>
+
+                                            <h6>11. Governing Law</h6>
+                                            <ul>
+                                                <li>These terms and conditions are governed by the laws of the Philippines.</li>
+                                            </ul>
+
+                                            <p>By clicking "Register," you confirm that you have read, understood, and agree to these terms and conditions.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="color: white;"><i class="bi bi-x-square-fill"></i> Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap JS (Required for Modal) -->
+                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
                             <div class="u-s-m-b-45">
                                 <button class="button button-primary w-100">Register</button>
                             </div>
-
 
                         </form>
                     </div>

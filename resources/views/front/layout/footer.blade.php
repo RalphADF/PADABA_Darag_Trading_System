@@ -1,4 +1,5 @@
 <!-- Footer -->
+<hr>
 <footer class="footer">
     <div class="container">
         <!-- Outer-Footer 
@@ -24,26 +25,26 @@
         -->
 
 
-        </div>
-        <!-- Outer-Footer /- -->
-        <!-- Mid-Footer -->
-        <div class="mid-footer-wrapper u-s-p-b-80">
+    </div>
+    <!-- Outer-Footer /- -->
+    <!-- Mid-Footer -->
+    <div class="mid-footer-wrapper u-s-p-b-80">
         <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <div class="footer-list">
-                        <h6>COMPANY</h6>
-                        <ul>
-                            <li>
-                                <a href="{{ url('about-us') }}">About Us</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('contact') }}">Contact Us</a>
-                            </li>
-                            
-                        </ul>
-                    </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="footer-list">
+                    <h6>COMPANY</h6>
+                    <ul>
+                        <li>
+                            <a href="{{ url('about-us') }}">About Us</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('contact') }}">Contact Us</a>
+                        </li>
+
+                    </ul>
                 </div>
-                 <!-- Mid-Footer 
+            </div>
+            <!-- Mid-Footer 
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="footer-list">
                         <h6>COLLECTION</h6>
@@ -61,49 +62,49 @@
                     </div>
                 </div>
                 -->
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <div class="footer-list">
-                        <h6>ACCOUNT</h6>
-                        <ul>
-                            <li>
-                                <a href="{{ url('user/account') }}">My Account</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('user/orders') }}">My Orders</a>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="footer-list">
+                    <h6>ACCOUNT</h6>
+                    <ul>
+                        <li>
+                            <a href="{{ url('user/account') }}">My Account</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('user/orders') }}">My Orders</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <div class="footer-list">
-                        <h6>CONTACT</h6>
-                        <ul>
-                            <li>
-                                <i class="fas fa-location-arrow u-s-m-r-9"></i>
-                                <span>PADABA</span>
-                            </li>
-                            <li>
-                                <a href="tel:+201255845857">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="footer-list">
+                    <h6>CONTACT</h6>
+                    <ul>
+                        <li>
+                            <i class="fas fa-location-arrow u-s-m-r-9"></i>
+                            <span>PADABA</span>
+                        </li>
+                        <li>
+                            <a href="tel:+201255845857">
                                 <i class="fas fa-phone u-s-m-r-9"></i>
                                 <span>Smart: 09617880022</span> <br>
                                 <i class="fas fa-phone u-s-m-r-9"></i>
                                 <span>Globe: 09164632232</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="mailto:padabathesis@gmail.com">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:padabathesis@gmail.com">
                                 <i class="fas fa-envelope u-s-m-r-9"></i>
                                 <span>
-                                padaba@gmail.com</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                                    padaba@gmail.com</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <!-- Mid-Footer /- -->
-        <!-- Bottom-Footer 
+    </div>
+    <!-- Mid-Footer /- -->
+    <!-- Bottom-Footer 
         <div class="bottom-footer-wrapper">
             <div class="social-media-wrapper">
                 <ul class="social-media-list">
@@ -154,4 +155,3 @@
 
 </footer>
 <!-- Footer /- -->
-

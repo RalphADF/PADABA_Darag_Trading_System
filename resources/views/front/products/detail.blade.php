@@ -710,9 +710,9 @@
 
 
                                         </div>
-                                        <div class="tag new">
+                                        {{-- <div class="tag new">
                                             <span>NEW</span>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 @endforeach
 
@@ -811,9 +811,9 @@
 
 
                                         </div>
-                                        <div class="tag new">
+                                        {{-- <div class="tag new">
                                             <span>NEW</span>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 @endforeach
 

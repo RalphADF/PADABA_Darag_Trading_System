@@ -8,12 +8,12 @@
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Brands</h4>
+                            <h4 class="card-title">Food Type</h4>
                             
 
 
                             
-                            <a href="{{ url('admin/add-edit-brand') }}" style="max-width: 150px; float: right; display: inline-block" class="btn btn-block btn-primary">Add Brand</a>
+                            <a href="{{ url('admin/add-edit-brand') }}" style="max-width: 150px; float: right; display: inline-block" class="btn btn-block btn-primary">Add Food Type</a>
 
                             {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
                             {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}

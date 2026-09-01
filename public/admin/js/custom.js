@@ -532,6 +532,31 @@ $(document).ready(function() {
 
 
     // Hide Courier Name and Tracking Number HTML input fields in admin/orders/order_details.blade.php in "Update Order Status" Section, and show them ONLY if the "Update Order Status" <select><option> (dropdown menu) is updated/changed (to 'Shipped' only) by an 'admin'    
- 
-
+    $(document).ready(function() {
+        function toggleFields() {
+            let status = $('#order_status').val(); // Get the selected value
+    
+            if (status === 'In Progress') { 
+                $('#courier_name, #courier_name_label').hide();
+                $('#delivery_schedule, #delivery_schedule_label').show();
+            } else if (status === 'In-Transit') { 
+                $('#courier_name, #courier_name_label').show();
+                $('#delivery_schedule, #delivery_schedule_label').show();
+            } else if (status === 'Delivered & Paid') { 
+                $('#courier_name, #courier_name_label').show();
+                $('#delivery_schedule, #delivery_schedule_label').hide();
+            } else {
+                $('#courier_name, #courier_name_label').hide();
+                $('#delivery_schedule, #delivery_schedule_label').hide();
+            }
+        }
+    
+        // Bind change event
+        $('#order_status').on('change', toggleFields);
+    
+        // Run once on page load to set initial state
+        toggleFields();
+    });
+    
+    
 }); // End of $(document).ready()

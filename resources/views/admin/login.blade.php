@@ -24,8 +24,10 @@
                     <div class="row w-100 mx-0">
                         <div class="col-lg-4 mx-auto">
                             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                                <h4>Hello! let's get started</h4>
-                                <h6 class="font-weight-light">Sign in to continue.</h6>
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ asset('front\images\main-logo\Asset.png') }}" alt="Logo" style="height: 60px; width: auto; margin-right: 10px;">
+                                    <h4 class="mb-0">PADABA Admin Login</h4>
+                                </div>
 
 
                                 {{-- Our Bootstrap error code in case of wrong credentials when logging in: --}}
@@ -89,6 +91,7 @@
             </div>
             <!-- page-body-wrapper ends -->
         </div>
+
         <!-- container-scroller -->
         <!-- plugins:js -->
         <script src="{{ url('admin/vendors/js/vendor.bundle.base.js') }}"></script>

@@ -102,7 +102,7 @@
                                 <div class="form-group">
                                     <label for="amount_type">Amount Type:</label><br>
                                     <span><input type="radio" name="amount_type" value="Percentage"  @if (isset($coupon['amount_type']) && $coupon['amount_type'] == 'Percentage') checked @endif>&nbsp;Percentage&nbsp;(in %)&nbsp;</span>
-                                    <span><input type="radio" name="amount_type" value="Fixed"       @if (isset($coupon['amount_type']) && $coupon['amount_type'] == 'Fixed')      checked @endif>&nbsp;Fixed&nbsp;(in PHP or USD)</span>
+                                    <span><input type="radio" name="amount_type" value="Fixed"       @if (isset($coupon['amount_type']) && $coupon['amount_type'] == 'Fixed')      checked @endif>&nbsp;Fixed&nbsp;(in PHP)</span>
                                 </div>                                
                                 <div class="form-group">
                                     <label for="amount">Amount:</label>

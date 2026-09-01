@@ -130,5 +130,21 @@
       }
     });
   }
+  $(document).ready(function() {
+    $(".slider-main").owlCarousel({
+        loop: true, // Enables infinite looping
+        margin: 10, // Adjust spacing between slides
+        nav: true, // Enables navigation arrows
+        dots: true, // Enables dots navigation
+        autoplay: true, // Enables auto-play
+        autoplayTimeout: 3000, // Time before moving to next slide (3s)
+        autoplayHoverPause: true, // Pause on hover
+        responsive: {
+            0: { items: 1 },
+            600: { items: 1 },
+            1000: { items: 1 }
+        }
+    });
+});
 
 })(jQuery);

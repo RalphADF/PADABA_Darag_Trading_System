@@ -96,7 +96,7 @@
                                 <label for="vendor_state">Shop Map Location</label>
                             </div>
 
-                            <!-- Add a div to display the map -->
+                            {{-- <!-- Add a div to display the map -->
                             <div id="map" style="height: 400px; width: 100%;"></div>
 
                             <!-- Google Maps JavaScript API -->
@@ -128,7 +128,46 @@
                                         alert("Invalid coordinates for the shop location.");
                                     }
                                 }
-                            </script>
+                            </script> --}}
+
+                            <!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet/dist/leaflet.css"
+/>
+
+<!-- Map container -->
+<div id="map" style="height: 400px; width: 100%;"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Pull your Blade-templated coords exactly as before
+    const latitude = parseFloat("{{ isset($vendorDetails['vendor_business']['shop_pincode']) ? $vendorDetails['vendor_business']['shop_pincode'] : '0' }}");
+    const longitude = parseFloat("{{ isset($vendorDetails['vendor_business']['shop_state'])    ? $vendorDetails['vendor_business']['shop_state']    : '0' }}");
+
+    if (!isNaN(latitude) && !isNaN(longitude)) {
+      // Initialize the map
+      const map = L.map('map').setView([ latitude, longitude ], 17);
+
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // Add a marker
+      L.marker([ latitude, longitude ])
+        .addTo(map)
+        .bindPopup('Shop Location')
+        .openPopup();
+    } else {
+      alert('Invalid coordinates for the shop location.');
+    }
+  });
+</script>
+
 
                             <div class="form-group">
                                 <label for="vendor_country">Shop Municipality/District</label>
